@@ -2,8 +2,9 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-    <title>下载我的证书</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>查询/下载证书</title>
     <style type="text/css">
         body {
             background-color: #999;
@@ -14,10 +15,25 @@
     <script src="bootstrap-4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div class="jumbotron text-center">
+    <h3>证书查询/下载服务相关</h3>
+    <!--<p>Resize this responsive page to see the effect!</p>-->
+</div>
 <div class="container">
-    <div class ="m-auto">
-        <div class="form-signin"  style="margin-top: 200px">
-            <h2 class="form-signin-heading" style="font-size: medium">请输入手机号及手机验证码</h2>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#certificateDownloadByPhone">证书下载</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#certificateQueryBySerialNum">证书查询</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div id="certificateDownloadByPhone" class="container tab-pane active"><br>
+            <h4>请输入手机号及手机验证码</h4>
             <label for="phone" class="sr-only">phone number</label>
             <input type="tel" id="phone" class="form-control" placeholder="手机号" onkeyup="checkPhone()"
                    onblur="checkPhone()" autofocus>
@@ -36,13 +52,39 @@
             </div>
 
             <br/>
+            <br/>
             <button class="btn btn-lg btn-primary btn-block" onclick="getDownloadURL()" type="submit" disabled
                     id="commitBtn">获取证书
             </button>
         </div>
-
-    </div> <!-- /container -->
-
+        <div id="certificateQueryBySerialNum" class="container tab-pane fade"><br>
+            <h4>请输入证书编号</h4>
+            <div class="input-group">
+                <input type="text" id="serialNum" class="form-control"
+                       placeholder="证书编号"/>
+                <button type="button" class="btn btn-primary input-group-addon" onclick="queryCertificateInfo()">查询</button>
+            </div>
+            <div style="margin-top:50px" >
+                <ul class="list-group list-group-flush" id="certificateInfo" style="display: none">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        姓名：
+                        <span name="certificateInfo.userName"></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        手机号：
+                        <span name="certificateInfo.phoneNum">阿斯大法</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        证书编号：
+                        <span name="certificateInfo.serialNum">99</span>
+                    </li>
+                </ul>
+                <div class="text-center" id="noCertificateInfo" style="display: none">
+                    <p>没有找到该证书相关信息！</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -116,7 +158,7 @@
             }
         }, 1000);
     }
-    // 下载页面
+    // 下载证书图片
     function getDownloadURL() {
         // 发请求至后台
         $.ajax({
@@ -125,9 +167,34 @@
             dataType: "json",
             method: "POST"
         }).done(function (msg) {
-            console.log(msg);
             if (msg.code == 0) {
                 window.location.href = "/certificate/download/" + msg.data;
+            } else {
+                alert(msg.message);
+            }
+        });
+    }
+    // 查询证书信息
+    function queryCertificateInfo() {
+        // 发请求至后台
+        $.ajax({
+            url: "/certificate/queryCertificateInfo",
+            data: {serialNum: $('#serialNum').val()},
+            dataType: "json",
+            method: "POST"
+        }).done(function (msg) {
+            if (msg.code == 0) {
+                var certificateInfo = msg.data;
+                if(certificateInfo == null){
+                    $("#noCertificateInfo").show();
+                    $("#certificateInfo").hide();
+                }else {
+                    $("span[name='certificateInfo.userName']").text(certificateInfo.userName);
+                    $("span[name='certificateInfo.phoneNum']").text(certificateInfo.phoneNum);
+                    $("span[name='certificateInfo.serialNum']").text(certificateInfo.serialNum);
+                    $("#certificateInfo").show();
+                    $("#noCertificateInfo").hide();
+                }
             } else {
                 alert(msg.message);
             }

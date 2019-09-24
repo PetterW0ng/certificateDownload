@@ -14,8 +14,4 @@ public class SurveyWechatPnApplication extends SpringBootServletInitializer {
 		SpringApplication.run(SurveyWechatPnApplication.class, args);
 	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(SurveyWechatPnApplication.class);
-	}
 }
