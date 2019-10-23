@@ -12,19 +12,24 @@ public class CertificateInfo {
     private String userName;
 
     /**
-     * 用户手机号
-     */
-    private String phoneNum;
-
-    /**
      * 证书编号
      */
     private String serialNum;
 
     /**
-     * 证书名称 下载使用
+     * 证书名称
      */
-    private String fileName;
+    private String certificateName;
+
+    /**
+     * 发证时间
+     */
+    private String issueTime;
+
+    /**
+     * 发证单位
+     */
+    private String issuingUnit;
 
     public String getUserName() {
         return userName;
@@ -32,14 +37,6 @@ public class CertificateInfo {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
     }
 
     public String getSerialNum() {
@@ -50,11 +47,27 @@ public class CertificateInfo {
         this.serialNum = serialNum;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getCertificateName() {
+        return certificateName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setCertificateName(String certificateName) {
+        this.certificateName = certificateName;
+    }
+
+    public String getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(String issueTime) {
+        this.issueTime = issueTime;
+    }
+
+    public String getIssuingUnit() {
+        return issuingUnit;
+    }
+
+    public void setIssuingUnit(String issuingUnit) {
+        this.issuingUnit = issuingUnit;
     }
 }

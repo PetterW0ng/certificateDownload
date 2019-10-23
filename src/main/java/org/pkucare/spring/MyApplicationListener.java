@@ -64,10 +64,11 @@ public class MyApplicationListener implements ApplicationListener<ApplicationRea
                 certificateInfo = new CertificateInfo();
                 certificateInfo.setUserName(row.getCell(0).getStringCellValue().trim());
                 certificateInfo.setSerialNum(row.getCell(1).getStringCellValue().trim());
-                certificateInfo.setPhoneNum(phone);
-                certificateInfo.setFileName(row.getCell(4).getStringCellValue());
-
-                certificatesURL.put(certificateInfo.getPhoneNum(), certificateInfo.getFileName());
+                certificateInfo.setCertificateName(row.getCell(4).getStringCellValue().trim());
+                certificateInfo.setIssueTime(row.getCell(5).getStringCellValue().trim());
+                certificateInfo.setIssuingUnit(row.getCell(6).getStringCellValue().trim());
+                String fileName = row.getCell(3).getStringCellValue().trim();
+                certificatesURL.put(phone, fileName);
                 certificatesInfo.put(certificateInfo.getSerialNum(), certificateInfo);
                 ++countor;
             }

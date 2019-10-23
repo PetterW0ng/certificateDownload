@@ -66,17 +66,25 @@
             </div>
             <div style="margin-top:50px" >
                 <ul class="list-group list-group-flush" id="certificateInfo" style="display: none">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        姓名：
-                        <span name="certificateInfo.userName"></span>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
+                        <span name="certificateInfo.userName">姓名</span>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        手机号：
-                        <span name="certificateInfo.phoneNum">阿斯大法</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item  justify-content-between align-items-center">
                         证书编号：
-                        <span name="certificateInfo.serialNum">99</span>
+                        <span name="certificateInfo.serialNum">证书编号</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        证书名称：
+                        <span name="certificateInfo.certificateName">证书名称</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证时间：
+                        <span name="certificateInfo.issueTime">发证时间</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证单位：
+                        <span name="certificateInfo.issuingUnit">发证单位</span>
                     </li>
                 </ul>
                 <div class="text-center" id="noCertificateInfo" style="display: none">
@@ -190,8 +198,10 @@
                     $("#certificateInfo").hide();
                 }else {
                     $("span[name='certificateInfo.userName']").text(certificateInfo.userName);
-                    $("span[name='certificateInfo.phoneNum']").text(certificateInfo.phoneNum);
                     $("span[name='certificateInfo.serialNum']").text(certificateInfo.serialNum);
+                    $("span[name='certificateInfo.certificateName']").text(certificateInfo.certificateName);
+                    $("span[name='certificateInfo.issueTime']").text(certificateInfo.issueTime);
+                    $("span[name='certificateInfo.issuingUnit']").text(certificateInfo.issuingUnit);
                     $("#certificateInfo").show();
                     $("#noCertificateInfo").hide();
                 }
