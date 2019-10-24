@@ -47,9 +47,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileNotFoundException.class)
     @ResponseBody
     Response handleFileNotFoundException(Exception e) {
-        e.printStackTrace();
         Response response = new Response<String>();
-        response.setData("没有找到文件");
+        response.setData("没有找到对应的证书文件");
         response.setCode(500);
         response.setMessage("ERROR");
         logger.error("后台出错了", e);

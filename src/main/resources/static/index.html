@@ -41,8 +41,8 @@
 
             <div class="input-group">
                 <label for="code" class="sr-only">verification code</label>
-                <input type="text" id="code" class="form-control" onkeyup="checkCode()" onblur="checkCode()"
-                       placeholder="验证码（有效期60秒）">
+                <input type="text" id="code" class="form-control" maxlength="4" onkeyup="checkCode()" onblur="checkCode()"
+                       placeholder="验证码（有效期5分钟）">
                 <button type="submit" class="btn btn-primary input-group-addon" onclick="getCode(this)" disabled
                         id="J_getCode">获取验证码
                 </button>

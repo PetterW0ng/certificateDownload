@@ -30,6 +30,7 @@ public class Constant {
     /**
      * 阿里大鱼 短信发送签名
      */
-    public static final String DAYU_SIGN_PRODUCT = "产品名称";
+//    public static final String DAYU_SIGN_PRODUCT = "产品名称";
+    public static final String DAYU_SIGN_PRODUCT = "北医脑健康";
 
 }

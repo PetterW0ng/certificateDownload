@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 
 /**
  * 用户下载证书
@@ -62,16 +64,32 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/download/{file}")
-    public ResponseEntity<byte[]> certificateDownload(@PathVariable String file) throws IOException {
+    public ResponseEntity<byte[]> certificateDownload(@PathVariable String file) throws FileNotFoundException {
         String fileName = file + Constant.FILE_TYPE;
         //将该文件加入到输入流之中
-        InputStream in = new FileInputStream(new FileUrlResource(dataPath + fileName).getFile());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.add("Content-Disposition", "attachment;filename=" + fileName);
-        HttpStatus statusCode = HttpStatus.OK;
-        ResponseEntity<byte[]> response = new ResponseEntity<>(FileCopyUtils.copyToByteArray(in), headers, statusCode);
-        LOGGER.warn("证书[{}]下载成功！", file);
+        ResponseEntity<byte[]> response = null;
+        InputStream in = null;
+        try {
+            in = new FileInputStream(new FileUrlResource(dataPath + fileName).getFile());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.add("Content-Disposition", "attachment;filename=" + fileName);
+            HttpStatus statusCode = HttpStatus.OK;
+            response = new ResponseEntity<>(FileCopyUtils.copyToByteArray(in), headers, statusCode);
+            LOGGER.warn("证书[{}]下载成功！", fileName);
+        } catch (FileNotFoundException e) {
+            throw e;
+        } catch (MalformedURLException e) {
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+
         return response;
     }
 

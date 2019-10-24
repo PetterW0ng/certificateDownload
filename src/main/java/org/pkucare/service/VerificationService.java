@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -46,15 +47,16 @@ public class VerificationService {
     @Value("${certificate.file.config.path}")
     private String dataConfigPath;
 
-    @Cacheable(key = "#phone")
+    /**
+     *
+     * @param phone
+     * @return
+     * @throws ApiException
+     */
+    @CachePut(key = "#phone")
     public String sendVerification(String phone) throws ApiException {
         // 短信模板的内容 4位随机验证
         int code = new Random().nextInt(8999) + 1000;
-
-        // todo 模拟验证码
-        if (code > 0){
-            return String.valueOf(code);
-        }
 
         String json = "{\"code\":\"" + code + "\",\"product\":\"证书查询\"}";
         TaobaoClient client = new DefaultTaobaoClient(smsApi, appkey, secret);
@@ -84,6 +86,13 @@ public class VerificationService {
         return String.valueOf(code);
     }
 
+    /**
+     * get value from cache
+     * Cacheable 注解表示在每次执行前都会check 是否存在，
+     * 如果存在直接在方法体返回，否则等方法执行完后把结果返回并缓存
+     * @param phone
+     * @return
+     */
     @Cacheable(key = "#phone", unless = "(null != #result) && !(#result eq -1)")
     public String getVerification(String phone) {
         logger.warn("没有找到手机号[{}]对应的验证码！", phone);
