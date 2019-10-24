@@ -20,4 +20,13 @@
            maxElementsInMemory="1000000"
            eternal="true"
            overflowToDisk="false"/>
+    <!--
+        访问受限的 缓存配置 6小时 21600 统一接口访问次数限制 3
+    -->
+    <cache name="requestLimit"
+           maxElementsInMemory="100000"
+           eternal="false"
+           timeToIdleSeconds="21600"
+           timeToLiveSeconds="21600"
+           overflowToDisk="false"/>
 </ehcache>

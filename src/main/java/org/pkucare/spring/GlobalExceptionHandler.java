@@ -1,6 +1,7 @@
 package org.pkucare.spring;
 
 import com.taobao.api.ApiException;
+import org.pkucare.exception.RequestLimitException;
 import org.pkucare.pojo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,32 @@ public class GlobalExceptionHandler {
         return response;
     }
 
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseBody
+    Response handleFileNotFoundException(FileNotFoundException e) {
+        Response response = new Response<String>();
+        response.setData("没有找到对应的证书文件");
+        response.setCode(500);
+        response.setMessage("ERROR");
+        logger.warn("后台出错了", e);
+        return response;
+    }
+
+    @ExceptionHandler(RequestLimitException.class)
+    @ResponseBody
+    Response handleRequestLimitException(RequestLimitException e) {
+        Response response = new Response<String>();
+        response.setData(e.getMessage());
+        response.setCode(1000);
+        response.setMessage(e.getMessage());
+        logger.warn("后台出错了", e);
+        return response;
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     Response handleException(Exception e) {
-        e.printStackTrace();
         Response response = new Response<String>();
         response.setData("后台出错了");
         response.setCode(500);
@@ -44,15 +67,5 @@ public class GlobalExceptionHandler {
         return response;
     }
 
-    @ExceptionHandler(FileNotFoundException.class)
-    @ResponseBody
-    Response handleFileNotFoundException(Exception e) {
-        Response response = new Response<String>();
-        response.setData("没有找到对应的证书文件");
-        response.setCode(500);
-        response.setMessage("ERROR");
-        logger.error("后台出错了", e);
-        return response;
-    }
 
 }

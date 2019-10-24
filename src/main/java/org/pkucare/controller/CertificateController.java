@@ -1,6 +1,8 @@
 package org.pkucare.controller;
 
 import com.taobao.api.ApiException;
+import org.pkucare.annotation.RequestLimit;
+import org.pkucare.exception.RequestLimitException;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.Constant;
@@ -45,8 +47,9 @@ public class CertificateController {
     @Value("${certificate.file.data.path}")
     private String dataPath;
 
+    @RequestLimit(count = 3)
     @RequestMapping(value = "/getDownloadURL", method = RequestMethod.POST)
-    public Response doVerification(@RequestParam String phone, @RequestParam String verificationCode, HttpServletRequest request) throws IOException {
+    public Response doVerification(@RequestParam String phone, @RequestParam String verificationCode, HttpServletRequest request) throws RequestLimitException, IOException {
         Response<String> response = new Response<>();
         // 1、验证手机号码及验证码
         String code = verificationService.getVerification(phone);
@@ -101,8 +104,9 @@ public class CertificateController {
      * @throws ApiException
      * @throws IOException
      */
+    @RequestLimit(count = 2)
     @RequestMapping(value = "/getVerificationCode", method = RequestMethod.POST)
-    public Response getVerificationCode(@RequestParam String phone) throws ApiException, IOException {
+    public Response getVerificationCode(@RequestParam String phone, HttpServletRequest request) throws ApiException, RequestLimitException, IOException {
         Response response = new Response<String>();
         // 1、验证手机号格式
         if (PatternUtil.testPhone(phone)) {
