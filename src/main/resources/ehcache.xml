@@ -7,24 +7,24 @@
             timeToLiveSeconds="120"
             overflowToDisk="false"/>
     <cache name="verificationCodeCache"
-           maxElementsInMemory="20000"
+           maxElementsInMemory="10000"
            eternal="false"
            timeToIdleSeconds="300"
            timeToLiveSeconds="300"
            overflowToDisk="false"/>
     <cache name="certificatesURL"
-           maxElementsInMemory="1000000"
+           maxElementsInMemory="30000"
            eternal="true"
            overflowToDisk="false"/>
     <cache name="certificatesInfo"
-           maxElementsInMemory="1000000"
+           maxElementsInMemory="30000"
            eternal="true"
            overflowToDisk="false"/>
     <!--
         访问受限的 缓存配置 6小时 21600 统一接口访问次数限制 3
     -->
     <cache name="requestLimit"
-           maxElementsInMemory="100000"
+           maxElementsInMemory="30000"
            eternal="false"
            timeToIdleSeconds="21600"
            timeToLiveSeconds="21600"
