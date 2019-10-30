@@ -45,8 +45,9 @@ public class MyApplicationListener implements ApplicationListener<ApplicationRea
         String dataConfigPath = context.getEnvironment().getProperty(Constant.ASSETS_PATH);
         int countor = 0;
         // 加载数据到缓存里面
+        FileInputStream file = null;
         try {
-            FileInputStream file = new FileInputStream(new FileUrlResource(dataConfigPath).getFile());
+            file = new FileInputStream(new FileUrlResource(dataConfigPath).getFile());
             Workbook workbook = new XSSFWorkbook(file);
             Sheet sheet = workbook.getSheetAt(0);
             DecimalFormat df = new DecimalFormat("0");
@@ -74,6 +75,13 @@ public class MyApplicationListener implements ApplicationListener<ApplicationRea
             }
         } catch (IOException e) {
             throw new RuntimeException("初始化文件数据时失败了！！！");
+        }finally {
+            if (file != null){
+                try {
+                    file.close();
+                } catch (IOException e) {
+                }
+            }
         }
         logger.info("结束读取 excel 数据文件, 共加载了[{}]条记录", countor);
     }
