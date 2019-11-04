@@ -49,15 +49,18 @@ public class RequestLimitContract {
         }
         String ip = request.getLocalAddr();
         String url = request.getRequestURL().toString();
-        String key = "reqlimit" + "_" + url + "_" + ip;
+        String phone = request.getParameter("phone");
+        String key = "reqlimit" + "_" + url + "_" + ip + "_" +phone;
 
         Cache requestLimitCache = cacheManager.getCache("requestLimit");
         Cache.ValueWrapper valueWrap = requestLimitCache.get(key);
         if (valueWrap == null) {
             requestLimitCache.put(key, 1);
+            logger.info("url={}, count={}",key, 1);
         } else {
             int count = Integer.valueOf(valueWrap.get().toString()) + 1;
             requestLimitCache.put(key, count);
+            logger.info("url={}, count={}",key, count);
             if (count > limit.count()) {
                 throw new RequestLimitException();
             }
