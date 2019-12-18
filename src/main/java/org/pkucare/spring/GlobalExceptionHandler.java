@@ -2,6 +2,7 @@ package org.pkucare.spring;
 
 import com.taobao.api.ApiException;
 import org.pkucare.exception.RequestLimitException;
+import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +40,9 @@ public class GlobalExceptionHandler {
     Response handleFileNotFoundException(FileNotFoundException e) {
         Response response = new Response<String>();
         response.setData("没有找到对应的证书文件");
-        response.setCode(500);
+        response.setCode(404);
         response.setMessage("ERROR");
-        logger.warn("后台出错了", e);
+        logger.warn("没有找到对应的证书文件", e);
         return response;
     }
 
@@ -50,9 +51,20 @@ public class GlobalExceptionHandler {
     Response handleRequestLimitException(RequestLimitException e) {
         Response response = new Response<String>();
         response.setData(e.getMessage());
-        response.setCode(1000);
+        response.setCode(1001);
         response.setMessage(e.getMessage());
-        logger.warn("后台出错了", e);
+        logger.warn("访问超出限制", e);
+        return response;
+    }
+
+    @ExceptionHandler(ValidateException.class)
+    @ResponseBody
+    Response handleRequestValidateException(ValidateException e) {
+        Response response = new Response<String>();
+        response.setData(e.getMessage());
+        response.setCode(1002);
+        response.setMessage(e.getMessage());
+        logger.warn("参数错误", e);
         return response;
     }
 

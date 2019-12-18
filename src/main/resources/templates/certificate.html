@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<meta charset="UTF-8"/>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>证书查询结果</title>
+<link rel="stylesheet" th:href="@{/bootstrap-4.3.1/css/bootstrap.min.css}"/>
+<script th:src="@{/jquery/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/bootstrap-4.3.1/js/bootstrap.min.js}"></script>
+<body>
+<div class="jumbotron text-center">
+    <h3>证书查询结果</h3>
+</div>
+<div class="container">
+    <!-- 证书详情页 -->
+    <div class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
+        <div class="card" th:each="certificateInfo : ${certificateInfoList}">
+            <div class="card-header" th:id="'certificateHeader' + ${certificateInfoStat.index}">
+                <button class="btn btn-link" type="button" data-toggle="collapse"
+                        th:data-target="'#certificateData' + ${certificateInfoStat.index}"
+                        aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}"
+                        th:text="${certificateInfo.issueTime}+' - '+${certificateInfo.userName}">
+                </button>
+            </div>
+            <div class="collapse show" th:id="'certificateData' + ${certificateInfoStat.index}"
+                 th:aria-labelledby="'certificateHeader' + ${certificateInfoStat.index}" data-parent="#accordion">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
+                        <span th:text="${certificateInfo.userName}">姓名</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center" th:if="${certificateInfo.idCard != null}">
+                        身份证号：
+                        <span th:text="${certificateInfo.idCard}">身份证号</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        证书编号：
+                        <span th:text="${certificateInfo.serialNum}">证书编号</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        证书名称：
+                        <span th:text="${certificateInfo.certificateName}">证书名称</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证时间：
+                        <span th:text="${certificateInfo.issueTime}">发证时间</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证单位：
+                        <span th:text="${certificateInfo.issuingUnit}">发证单位</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center" style="padding: 50px 5px">
+                        <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg'}" width="100%">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(certificateInfoList)}" class="justify-content-between align-items-center">
+        没有相关信息！
+    </div>
+    <script th:inline="javascript">
+        $(function ($) {
+//            $('.collapse').collapse()
+        });
+    </script>
+</div>
+</body>
+</html>

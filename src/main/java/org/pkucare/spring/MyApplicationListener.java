@@ -35,7 +35,6 @@ public class MyApplicationListener implements ApplicationListener<ApplicationRea
      * @param event
      */
     @Override
-    @CachePut
     public void onApplicationEvent(ApplicationReadyEvent event) {
         logger.info("开始读取 excel 数据文件");
         ApplicationContext context = event.getApplicationContext();
@@ -68,8 +67,8 @@ public class MyApplicationListener implements ApplicationListener<ApplicationRea
                 certificateInfo.setCertificateName(row.getCell(4).getStringCellValue().trim());
                 certificateInfo.setIssueTime(row.getCell(5).getStringCellValue().trim());
                 certificateInfo.setIssuingUnit(row.getCell(6).getStringCellValue().trim());
-                String fileName = row.getCell(3).getStringCellValue().trim();
-                certificatesURL.put(phone, fileName);
+                certificateInfo.setFileName(row.getCell(3).getStringCellValue().trim());
+                certificatesURL.put(phone, certificateInfo);
                 certificatesInfo.put(certificateInfo.getSerialNum(), certificateInfo);
                 ++countor;
             }

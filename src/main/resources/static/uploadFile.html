@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>查询/下载证书</title>
+    <style type="text/css">
+        body {
+            background-color: #999;
+        }
+    </style>
+    <link rel="stylesheet" href="bootstrap-4.3.1/css/bootstrap.min.css">
+    <script src="jquery/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap-4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center">
+    <h3>上传考证人员名单</h3>
+    <!--<p>Resize this responsive page to see the effect!</p>-->
+</div>
+<div class="container">
+    <!-- Tab panes -->
+    <div id="certificateDownloadByPhone" class="container tab-pane active"><br>
+        <form method="post" action="/cert/uploadFile" enctype="multipart/form-data">
+            <input type="file" name="file" class="form-control" placeholder="选择文件" >
+            <br/>
+            <br/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                上传人员
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

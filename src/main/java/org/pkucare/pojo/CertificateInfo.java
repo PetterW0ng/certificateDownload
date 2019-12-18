@@ -1,9 +1,13 @@
 package org.pkucare.pojo;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  * 用户证书相关的信息
  * Created by weiqin on 2019/9/23.
  */
+@Document(collection = "certificate")
 public class CertificateInfo {
 
     /**
@@ -14,6 +18,7 @@ public class CertificateInfo {
     /**
      * 证书编号
      */
+    @Indexed
     private String serialNum;
 
     /**
@@ -30,6 +35,38 @@ public class CertificateInfo {
      * 发证单位
      */
     private String issuingUnit;
+
+    /**
+     * 身份证
+     */
+    @Indexed
+    private String idCard;
+
+    /**
+     * 文件名
+     */
+    private String fileName;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public String getUserName() {
         return userName;
@@ -69,5 +106,13 @@ public class CertificateInfo {
 
     public void setIssuingUnit(String issuingUnit) {
         this.issuingUnit = issuingUnit;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
