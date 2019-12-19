@@ -31,8 +31,8 @@
 <div class="container">
     <!-- 证书详情页 -->
     <div class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
-        <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="padding: 2px 0px">
-            <a class="card-header list-group-item align-items-start list-group-item-c" style="border: none" th:id="'certificateHeader' + ${certificateInfoStat.index}">
+        <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="border:none;padding-bottom: 5px">
+            <a class="card-header list-group-item align-items-start list-group-item-c" style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}">
                 <div class="d-flex justify-content-between" data-toggle="collapse"
                      th:data-target="'#certificateData' + ${certificateInfoStat.index}"
                      aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}">
