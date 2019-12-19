@@ -7,6 +7,23 @@
 <link rel="stylesheet" th:href="@{/bootstrap-4.3.1/css/bootstrap.min.css}"/>
 <script th:src="@{/jquery/jquery-3.4.1.min.js}"></script>
 <script th:src="@{/bootstrap-4.3.1/js/bootstrap.min.js}"></script>
+<style>
+    .span_sanjiaor{
+        text-align: right;
+        display: inline-block;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent  #000;
+    }
+
+    .span_sanjiaod{
+        text-align: right;
+        display: inline-block;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #000 transparent transparent transparent;
+    }
+</style>
 <body>
 <div class="jumbotron text-center">
     <h3>证书查询结果</h3>
@@ -15,23 +32,22 @@
     <!-- 证书详情页 -->
     <div class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
         <div class="card" th:each="certificateInfo : ${certificateInfoList}">
-            <div class="card-header" th:id="'certificateHeader' + ${certificateInfoStat.index}">
-                <button class="btn btn-link" type="button" data-toggle="collapse"
-                        th:data-target="'#certificateData' + ${certificateInfoStat.index}"
-                        aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}"
-                        th:text="${certificateInfo.issueTime}+' - '+${certificateInfo.userName}">
-                </button>
-            </div>
+            <a class="card-header list-group-item align-items-start list-group-item-c" th:id="'certificateHeader' + ${certificateInfoStat.index}">
+                <div class="d-flex justify-content-between" data-toggle="collapse"
+                     th:data-target="'#certificateData' + ${certificateInfoStat.index}"
+                     aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}">
+                    <div class="d-flex mb-1" style="color: #108EE9"
+                         th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
+                    </div>
+                    <i class="span_sanjiaor" style="height: 10px;"></i>
+                </div>
+            </a>
             <div class="collapse show" th:id="'certificateData' + ${certificateInfoStat.index}"
                  th:aria-labelledby="'certificateHeader' + ${certificateInfoStat.index}" data-parent="#accordion">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item  justify-content-between align-items-center">
                         姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
                         <span th:text="${certificateInfo.userName}">姓名</span>
-                    </li>
-                    <li class="list-group-item  justify-content-between align-items-center" th:if="${certificateInfo.idCard != null}">
-                        身份证号：
-                        <span th:text="${certificateInfo.idCard}">身份证号</span>
                     </li>
                     <li class="list-group-item  justify-content-between align-items-center">
                         证书编号：
@@ -61,7 +77,13 @@
     </div>
     <script th:inline="javascript">
         $(function ($) {
-//            $('.collapse').collapse()
+            $('.collapse').collapse();
+
+            $('.card').on('hide.bs.collapse show.bs.collapse', function (e) {
+                var $this = $(this)
+                $this.find("i").toggleClass("span_sanjiaod");
+                $this.find("i").toggleClass("span_sanjiaor");
+            });
         });
     </script>
 </div>

@@ -1,9 +1,6 @@
 package org.pkucare.service;
 
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.repository.CertificateRepository;
@@ -74,9 +71,7 @@ public class CertificateService {
     public List<CertificateInfo> queryCertByQueryStr(String queryStr) {
         List<CertificateInfo> certificateInfoSerialList = this.queryCertBySerialNum(queryStr);
         List<CertificateInfo> certificateInfoIdCardList = this.queryCertByIdCard(queryStr);
-        List<CertificateInfo> certificateInfoPhoneList = this.queryCertByPhone(queryStr);
         certificateInfoIdCardList.addAll(certificateInfoSerialList);
-        certificateInfoIdCardList.addAll(certificateInfoPhoneList);
         return certificateInfoIdCardList;
     }
 
@@ -113,9 +108,9 @@ public class CertificateService {
                 certificateInfo.setIssuingUnit(row.getCell(6).getStringCellValue().trim());
                 certificateInfo.setFileName(row.getCell(3).getStringCellValue().trim());
                 certificateInfo.setPhone(phone);
-                String idCard = row.getCell(7).getStringCellValue().trim();
-                if(!StringUtils.isEmpty(idCard)){
-                    certificateInfo.setIdCard(idCard);
+                Cell idCardCell = row.getCell(7);
+                if(null != idCardCell){
+                    certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }
                 certificateInfoList.add(certificateInfo);
             }

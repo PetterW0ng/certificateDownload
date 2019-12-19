@@ -8,6 +8,7 @@ import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.Constant;
 import org.pkucare.service.CertificateService;
 import org.pkucare.service.VerificationService;
+import org.pkucare.util.MessageDigestUtil;
 import org.pkucare.util.PatternUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,13 +66,13 @@ public class CertificateController {
      */
     @RequestLimit(count = 3)
     @RequestMapping(value = "/getDownloadURL", method = RequestMethod.POST)
-    public Response doVerification(@RequestParam String phone, @RequestParam String verificationCode,  HttpServletRequest request) throws RequestLimitException, IOException {
+    public Response doVerification(@RequestParam String phone, @RequestParam String verificationCode, HttpServletRequest request) throws RequestLimitException, IOException {
         Response<String> response = new Response<>();
         // 1、验证手机号码及验证码
         String code = verificationService.getVerification(phone);
         if (verificationCode.equals(code)) {
             // 2、下发下载证书的地址, 从缓存中获取
-            String url = "/cert/queryCertificateInfo?serialNum=" + phone;
+            String url = "/cert/queryCertByPhone?phone=" + phone +"&sign=" + MessageDigestUtil.md5(phone);
             logger.warn("手机号[{}]输入的验证码[{}]--正确！", phone, verificationCode);
             response.setData(url);
         } else {
@@ -157,13 +158,33 @@ public class CertificateController {
      * @throws ApiException
      * @throws IOException
      */
-    @RequestMapping(value = "/queryCertificateInfo", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(value = "/queryCertificateInfo", method = RequestMethod.POST)
     public ModelAndView queryCertificateInfo(@RequestParam(value = "serialNum") String queryStr) throws ValidateException {
-        if(StringUtils.isEmpty(queryStr)){
+        if (StringUtils.isEmpty(queryStr)) {
             throw new ValidateException();
         }
         ModelAndView mv = new ModelAndView("certificate");
         mv.getModel().put("certificateInfoList", certificateService.queryCertByQueryStr(queryStr));
+        return mv;
+    }
+
+    /**
+     * 根据 手机号 查询证书信息
+     *
+     * @param phone
+     * @return
+     * @throws ApiException
+     * @throws IOException
+     */
+    @RequestMapping(value = "/queryCertByPhone", method = RequestMethod.GET)
+    public ModelAndView queryCertByPhone(@RequestParam(required = false) String phone,@RequestParam(required = false) String sign) throws ValidateException {
+        if (!PatternUtil.testPhone(phone) || StringUtils.isEmpty(sign)) {
+            throw new ValidateException();
+        }else if(!sign.equals(MessageDigestUtil.md5(phone))){
+            throw new ValidateException("非法操作，签名错误！");
+        }
+        ModelAndView mv = new ModelAndView("certificate");
+        mv.getModel().put("certificateInfoList", certificateService.queryCertByPhone(phone));
         return mv;
     }
 
@@ -177,7 +198,7 @@ public class CertificateController {
      */
     @RequestMapping(value = "/{serialNum}", method = RequestMethod.GET)
     public ModelAndView queryCertificateBySerialNum(@PathVariable String serialNum) throws ValidateException {
-        if(StringUtils.isEmpty(serialNum)){
+        if (StringUtils.isEmpty(serialNum)) {
             throw new ValidateException();
         }
         ModelAndView mv = new ModelAndView("certificate");
@@ -187,7 +208,7 @@ public class CertificateController {
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public Response<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        logger.info("开始上传文件 fileName ={}", file.getName());
+        logger.info("开始上传文件 fileName ={}", file.getOriginalFilename());
         Response<String> response = new Response<>();
         Integer importCount = certificateService.excel2Mongo(file);
         response.setData("共导入数据 " + importCount + " 条");

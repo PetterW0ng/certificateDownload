@@ -16,17 +16,17 @@
 </head>
 <body>
 <div class="jumbotron text-center">
-    <h3>证书查询/下载服务相关</h3>
+    <h3>证书查询服务</h3>
     <!--<p>Resize this responsive page to see the effect!</p>-->
 </div>
 <div class="container">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#certificateDownloadByPhone">证书下载</a>
+            <a class="nav-link active" data-toggle="tab" href="#certificateDownloadByPhone">手机查询</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#certificateQueryBySerialNum">证书查询</a>
+            <a class="nav-link" data-toggle="tab" href="#certificateQueryBySerialNum">其他方式</a>
         </li>
     </ul>
 
@@ -59,12 +59,13 @@
         </div>
         <div id="certificateQueryBySerialNum" class="container tab-pane fade"><br>
             <h4>请输入证书编号或身份证号</h4>
-            <form action="/cert/queryCertificateInfo" method="post">
+            <form name="queryForm" action="/cert/queryCertificateInfo" method="post">
             <div class="input-group">
                 <input type="text" id="serialNum" name="serialNum" class="form-control"
                        placeholder="证书编号或身份证号"/>
-                <button class="btn btn-primary input-group-addon" type="submit">查询</button>
+                <button class="btn btn-primary input-group-addon" type="button" onclick="queryCertificateInfo()">查询</button>
             </div>
+                <p style="padding-top: 20px"><b style="color: red">*</b> 孤独症康复专业先修课学员暂不支持身份证号查询证书功能。</p>
             </form>
             <div style="margin-top:50px" >
                 <ul class="list-group list-group-flush" id="certificateInfo" style="display: none">
@@ -186,31 +187,12 @@
     }
     // 查询证书信息
     function queryCertificateInfo() {
-        // 发请求至后台
-        $.ajax({
-            url: "/cert/queryCertificateInfo",
-            data: {serialNum: $('#serialNum').val()},
-            dataType: "json",
-            method: "POST"
-        }).done(function (msg) {
-            if (msg.code == 0) {
-                var certificateInfo = msg.data;
-                if(certificateInfo == null){
-                    $("#noCertificateInfo").show();
-                    $("#certificateInfo").hide();
-                }else {
-                    $("span[name='certificateInfo.userName']").text(certificateInfo.userName);
-                    $("span[name='certificateInfo.serialNum']").text(certificateInfo.serialNum);
-                    $("span[name='certificateInfo.certificateName']").text(certificateInfo.certificateName);
-                    $("span[name='certificateInfo.issueTime']").text(certificateInfo.issueTime);
-                    $("span[name='certificateInfo.issuingUnit']").text(certificateInfo.issuingUnit);
-                    $("#certificateInfo").show();
-                    $("#noCertificateInfo").hide();
-                }
-            } else {
-                alert(msg.message);
-            }
-        });
+        if($('#serialNum').val() == ""){
+            alert("证书编号或身份证号不能为空！")
+        }else {
+            // 发请求至后台
+            document.queryForm.submit();
+        }
     }
 </script>
 </body>
