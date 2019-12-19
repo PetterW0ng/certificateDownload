@@ -92,23 +92,23 @@ public class CertificateService {
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
             for (Row row : sheet) {
                 String phone = "";
-                if (row.getCell(2).getCellType() == CellType.NUMERIC) {
-                    phone = df.format(row.getCell(2).getNumericCellValue()).trim();
+                if (row.getCell(3).getCellType() == CellType.NUMERIC) {
+                    phone = df.format(row.getCell(3).getNumericCellValue()).trim();
                 } else {
-                    phone = row.getCell(2).getStringCellValue().trim();
+                    phone = row.getCell(3).getStringCellValue().trim();
                 }
                 if (null == phone) {
                     break;
                 }
                 certificateInfo = new CertificateInfo();
-                certificateInfo.setUserName(row.getCell(0).getStringCellValue().trim());
-                certificateInfo.setSerialNum(row.getCell(1).getStringCellValue().trim());
-                certificateInfo.setCertificateName(row.getCell(4).getStringCellValue().trim());
-                certificateInfo.setIssueTime(row.getCell(5).getStringCellValue().trim());
-                certificateInfo.setIssuingUnit(row.getCell(6).getStringCellValue().trim());
-                certificateInfo.setFileName(row.getCell(3).getStringCellValue().trim());
+                certificateInfo.setUserName(row.getCell(1).getStringCellValue().trim());
+                certificateInfo.setSerialNum(row.getCell(2).getStringCellValue().trim());
+                certificateInfo.setCertificateName(row.getCell(5).getStringCellValue().trim());
+                certificateInfo.setIssueTime(row.getCell(6).getStringCellValue().trim());
+                certificateInfo.setIssuingUnit(row.getCell(7).getStringCellValue().trim());
+                certificateInfo.setFileName(row.getCell(4).getStringCellValue().trim());
                 certificateInfo.setPhone(phone);
-                Cell idCardCell = row.getCell(7);
+                Cell idCardCell = row.getCell(8);
                 if(null != idCardCell){
                     certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }

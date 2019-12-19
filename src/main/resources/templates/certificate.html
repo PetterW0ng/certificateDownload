@@ -31,15 +31,17 @@
 <div class="container">
     <!-- 证书详情页 -->
     <div class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
-        <div class="card" th:each="certificateInfo : ${certificateInfoList}">
-            <a class="card-header list-group-item align-items-start list-group-item-c" th:id="'certificateHeader' + ${certificateInfoStat.index}">
+        <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="padding: 2px 0px">
+            <a class="card-header list-group-item align-items-start list-group-item-c" style="border: none" th:id="'certificateHeader' + ${certificateInfoStat.index}">
                 <div class="d-flex justify-content-between" data-toggle="collapse"
                      th:data-target="'#certificateData' + ${certificateInfoStat.index}"
                      aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}">
                     <div class="d-flex mb-1" style="color: #108EE9"
                          th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
                     </div>
+                    <div class="fa fa-fw fa-chevron-right">
                     <i class="span_sanjiaor" style="height: 10px;"></i>
+                    </div>
                 </div>
             </a>
             <div class="collapse show" th:id="'certificateData' + ${certificateInfoStat.index}"

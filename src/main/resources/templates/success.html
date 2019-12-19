@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<meta charset="UTF-8"/>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>证书查询结果</title>
+<link rel="stylesheet" th:href="@{/bootstrap-4.3.1/css/bootstrap.min.css}"/>
+<script th:src="@{/jquery/jquery-3.4.1.min.js}"></script>
+<script th:src="@{/bootstrap-4.3.1/js/bootstrap.min.js}"></script>
+
+<body>
+<div class="jumbotron text-center">
+    <h3>证书导入结果</h3>
+</div>
+<div class="container">
+    <div class="justify-content-between align-items-center" th:text="${message}">
+        导入成功！
+    </div>
+</div>
+</body>
+</html>

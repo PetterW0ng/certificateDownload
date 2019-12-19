@@ -207,13 +207,13 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public Response<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
         logger.info("开始上传文件 fileName ={}", file.getOriginalFilename());
-        Response<String> response = new Response<>();
         Integer importCount = certificateService.excel2Mongo(file);
-        response.setData("共导入数据 " + importCount + " 条");
         logger.info("结束上传文件 fileName ={}，共新增数据 {} 条", file.getName(), importCount);
-        return response;
+        ModelAndView mv = new ModelAndView("success");
+        mv.getModel().put("message", "共导入数据 " + (importCount-1) + " 条");
+        return mv;
     }
 
 }
