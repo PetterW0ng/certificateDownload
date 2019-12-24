@@ -164,7 +164,7 @@ public class CertificateController {
             throw new ValidateException();
         }
         ModelAndView mv = new ModelAndView("certificate");
-        mv.getModel().put("certificateInfoList", certificateService.queryCertByQueryStr(queryStr.toUpperCase()));
+        mv.getModel().put("certificateInfoList", certificateService.queryCertByQueryStr(queryStr));
         return mv;
     }
 

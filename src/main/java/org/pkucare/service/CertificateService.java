@@ -113,7 +113,7 @@ public class CertificateService {
                 certificateInfo.setPhone(phone);
                 Cell idCardCell = row.getCell(8);
                 if(null != idCardCell){
-                    certificateInfo.setIdCard(idCardCell.getStringCellValue().trim().toUpperCase());
+                    certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }
                 certificateInfoList.add(certificateInfo);
             }

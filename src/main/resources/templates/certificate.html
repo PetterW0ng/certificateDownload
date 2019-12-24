@@ -32,10 +32,8 @@
     <!-- 证书详情页 -->
     <p class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
         <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="border:none;padding-bottom: 5px">
-            <a class="card-header list-group-item align-items-start list-group-item-c" style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}">
-                <div class="d-flex justify-content-between" data-toggle="collapse"
-                     th:data-target="'#certificateData' + ${certificateInfoStat.index}"
-                     aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}">
+            <a class="card-header list-group-item align-items-start list-group-item-c"  data-toggle="collapse" aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}" style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}" th:data-target="'#certificateData' + ${certificateInfoStat.index}" th:href="'#certificateData' + ${certificateInfoStat.index}">
+                <div class="d-flex justify-content-between">
                     <div class="d-flex mb-1" style="color: #108EE9"
                          th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
                     </div>
@@ -81,6 +79,7 @@
     </div>
     <script th:inline="javascript">
         $(function ($) {
+
             $('.collapse').collapse();
 
             $('.card').on('hide.bs.collapse show.bs.collapse', function (e) {
