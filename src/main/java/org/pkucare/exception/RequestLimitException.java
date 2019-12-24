@@ -7,7 +7,7 @@ package org.pkucare.exception;
 public class RequestLimitException extends Exception {
 
     public RequestLimitException(){
-        super("超出了访问次数限制，请过段时间后再试！");
+        super("超出了访问次数限制，请6小时后再试！");
     }
 
     public RequestLimitException(String message){

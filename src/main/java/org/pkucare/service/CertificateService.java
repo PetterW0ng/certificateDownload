@@ -92,6 +92,9 @@ public class CertificateService {
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
             for (Row row : sheet) {
                 String phone = "";
+                if(row.getCell(3) == null) {
+                    break;
+                }
                 if (row.getCell(3).getCellType() == CellType.NUMERIC) {
                     phone = df.format(row.getCell(3).getNumericCellValue()).trim();
                 } else {
@@ -110,7 +113,7 @@ public class CertificateService {
                 certificateInfo.setPhone(phone);
                 Cell idCardCell = row.getCell(8);
                 if(null != idCardCell){
-                    certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
+                    certificateInfo.setIdCard(idCardCell.getStringCellValue().trim().toUpperCase());
                 }
                 certificateInfoList.add(certificateInfo);
             }

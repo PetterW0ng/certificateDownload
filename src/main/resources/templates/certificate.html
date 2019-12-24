@@ -30,7 +30,7 @@
 </div>
 <div class="container">
     <!-- 证书详情页 -->
-    <div class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
+    <p class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
         <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="border:none;padding-bottom: 5px">
             <a class="card-header list-group-item align-items-start list-group-item-c" style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}">
                 <div class="d-flex justify-content-between" data-toggle="collapse"
@@ -68,11 +68,13 @@
                         <span th:text="${certificateInfo.issuingUnit}">发证单位</span>
                     </li>
                     <li class="list-group-item  justify-content-between align-items-center" style="padding: 50px 5px">
-                        <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg'}" width="100%">
+                        <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg'}" width="100%" style="padding-bottom:10px">
+                        <b style="color: red">*</b> 请长按图片保存您的证书。
                     </li>
                 </ul>
             </div>
         </div>
+
     </div>
     <div th:if="${#lists.isEmpty(certificateInfoList)}" class="justify-content-between align-items-center">
         没有相关信息！
