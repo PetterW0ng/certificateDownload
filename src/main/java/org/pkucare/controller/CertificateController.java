@@ -5,6 +5,7 @@ import org.pkucare.annotation.RequestLimit;
 import org.pkucare.exception.RequestLimitException;
 import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.Response;
+import org.pkucare.pojo.constant.AdURL;
 import org.pkucare.pojo.constant.Constant;
 import org.pkucare.service.CertificateService;
 import org.pkucare.service.VerificationService;
@@ -165,6 +166,7 @@ public class CertificateController {
         }
         ModelAndView mv = new ModelAndView("certificate");
         mv.getModel().put("certificateInfoList", certificateService.queryCertByQueryStr(queryStr));
+        mv.getModel().put("queryStr", queryStr);
         return mv;
     }
 
@@ -185,6 +187,7 @@ public class CertificateController {
         }
         ModelAndView mv = new ModelAndView("certificate");
         mv.getModel().put("certificateInfoList", certificateService.queryCertByPhone(phone));
+        mv.getModel().put("queryStr", phone);
         return mv;
     }
 
@@ -203,6 +206,7 @@ public class CertificateController {
         }
         ModelAndView mv = new ModelAndView("certificate");
         mv.getModel().put("certificateInfoList", certificateService.queryCertBySerialNum(serialNum));
+        mv.getModel().put("queryStr", serialNum);
         return mv;
     }
 
@@ -215,5 +219,15 @@ public class CertificateController {
         mv.getModel().put("message", "共导入数据 " + (importCount-1) + " 条");
         return mv;
     }
+
+    @RequestMapping(value = "/adClick", method = RequestMethod.POST)
+    public Response handleFileUpload(@RequestParam String userQry, @RequestParam Integer level) {
+        String url = AdURL.getUrl(level);
+        logger.info("用户 {} ,点击了 {} ,地址为 {}", userQry, level, url);
+        Response<String> response = new Response();
+        response.setData(url);
+        return response;
+    }
+
 
 }
