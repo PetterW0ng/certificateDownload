@@ -52,6 +52,8 @@ public class CertificateInfo {
      */
     private String phone;
 
+    private String createTime;
+
     public String getIdCard() {
         return idCard;
     }
@@ -114,5 +116,13 @@ public class CertificateInfo {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

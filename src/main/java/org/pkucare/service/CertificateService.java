@@ -100,7 +100,7 @@ public class CertificateService {
                 } else {
                     phone = row.getCell(3).getStringCellValue().trim();
                 }
-                if (null == phone) {
+                if (null == phone || "".equals(phone)) {
                     break;
                 }
                 certificateInfo = new CertificateInfo();
@@ -115,8 +115,10 @@ public class CertificateService {
                 if(null != idCardCell){
                     certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }
+
                 certificateInfoList.add(certificateInfo);
             }
+            certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis()/1000));
             certificateRepository.insert(certificateInfoList);
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
             return certificateInfoList.size();
