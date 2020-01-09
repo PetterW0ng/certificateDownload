@@ -37,12 +37,12 @@
            style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}"
            th:data-target="'#certificateData' + ${certificateInfoStat.index}"
            th:href="'#certificateData' + ${certificateInfoStat.index}">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex mb-1" style="color: #108EE9"
+            <div class="d-flex justify-content-between" style="color: #108EE9">
+                <div class="d-flex mb-1"
                      th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
                 </div>
                 <div class="fa fa-fw fa-chevron-right">
-                    <i class="span_sanjiaor" style="height: 10px;"></i>
+                    点击查看&nbsp;&nbsp;&nbsp;<i class="span_sanjiaor" style="height: 10px;"></i>
                 </div>
             </div>
         </a>
@@ -84,6 +84,9 @@
 
 <div class="justify-content-between align-items-center">
     <img th:src="@{'/img/ad_title.jpg'}" width="100%" >
+</div>
+<div class="justify-content-between align-items-center">
+    <img th:src="@{'/img/ad_coupon.png'}" width="100%" style="padding:5px 25px" onclick="adClick(4)">
 </div>
 <div class="justify-content-between align-items-center">
     <img th:src="@{'/img/ad_junior.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(1)">

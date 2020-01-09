@@ -65,7 +65,7 @@ public class CertificateController {
      * @throws RequestLimitException
      * @throws IOException
      */
-    @RequestLimit(count = 3)
+//    @RequestLimit(count = 3)
     @RequestMapping(value = "/getDownloadURL", method = RequestMethod.POST)
     public Response doVerification(@RequestParam String phone, @RequestParam String verificationCode, HttpServletRequest request) throws RequestLimitException, IOException {
         Response<String> response = new Response<>();
@@ -129,7 +129,7 @@ public class CertificateController {
      * @throws ApiException
      * @throws IOException
      */
-    @RequestLimit(count = 2)
+//    @RequestLimit(count = 2)
     @RequestMapping(value = "/getVerificationCode", method = RequestMethod.POST)
     public Response getVerificationCode(@RequestParam String phone, HttpServletRequest request) throws ApiException, RequestLimitException, IOException {
         Response response = new Response<String>();
