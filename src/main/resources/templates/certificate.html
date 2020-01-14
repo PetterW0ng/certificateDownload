@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <meta name="viewport"
       content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>证书查询结果</title>
@@ -70,7 +73,7 @@
                     <span th:text="${certificateInfo.issuingUnit}">发证单位</span>
                 </li>
                 <li class="list-group-item  justify-content-between align-items-center" style="padding: 50px 5px">
-                    <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg'}" width="100%" style="padding-bottom:10px">
+                    <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg?R=' + ${#strings.randomAlphanumeric(4)}}" width="100%" style="padding-bottom:10px">
                     <b style="color: red">*</b> 请长按图片保存您的证书。
                 </li>
             </ul>

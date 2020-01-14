@@ -5,8 +5,8 @@ package org.pkucare.pojo;
  */
 public class Response<T> {
 
-    public static int SUCCESS = 0;
-    public static int FAILURE = -1;
+    public static final int SUCCESS = 0;
+    public static final int FAILURE = -1;
 
     private T data;
 

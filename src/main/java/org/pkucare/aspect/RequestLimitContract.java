@@ -58,7 +58,7 @@ public class RequestLimitContract {
             requestLimitCache.put(key, 1);
             logger.info("url={}, count={}",key, 1);
         } else {
-            int count = Integer.valueOf(valueWrap.get().toString()) + 1;
+            int count = Integer.parseInt(valueWrap.get().toString()) + 1;
             requestLimitCache.put(key, count);
             logger.info("url={}, count={}",key, count);
             if (count > limit.count()) {
