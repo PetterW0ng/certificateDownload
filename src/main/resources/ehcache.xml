@@ -3,13 +3,13 @@
     <defaultCache
             maxElementsInMemory="20000"
             eternal="false"
-            timeToIdleSeconds="120"
+            timeToIdleSeconds="0"
             timeToLiveSeconds="120"
             overflowToDisk="false"/>
     <cache name="verificationCodeCache"
            maxElementsInMemory="10000"
            eternal="false"
-           timeToIdleSeconds="300"
+           timeToIdleSeconds="0"
            timeToLiveSeconds="300"
            overflowToDisk="false"/>
     <cache name="certificatesURL"
@@ -26,7 +26,7 @@
     <cache name="requestLimit"
            maxElementsInMemory="30000"
            eternal="false"
-           timeToIdleSeconds="21600"
+           timeToIdleSeconds="0"
            timeToLiveSeconds="21600"
            overflowToDisk="false"/>
 </ehcache>
