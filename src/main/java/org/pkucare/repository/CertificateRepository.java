@@ -36,4 +36,7 @@ public interface CertificateRepository extends MongoRepository<CertificateInfo, 
      */
     @Query("{phone : ?0}")
     List<CertificateInfo> queryCertByPhone(String phone);
+
+    @Override
+    <S extends CertificateInfo> S save(S s);
 }

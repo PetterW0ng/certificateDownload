@@ -1,5 +1,6 @@
 package org.pkucare.service;
 
+import com.mongodb.BasicDBObject;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.pkucare.pojo.CertificateInfo;
@@ -7,8 +8,12 @@ import org.pkucare.repository.CertificateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicUpdate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,6 +33,9 @@ public class CertificateService {
 
     @Autowired
     private CertificateRepository certificateRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     /**
      * 根据 idCard 查询用户
@@ -135,4 +143,8 @@ public class CertificateService {
 
     }
 
+    public void modify(CertificateInfo certificateInfo) {
+        Query query = new Query(Criteria.where("serialNum").is(certificateInfo.getSerialNum()));
+        mongoTemplate.updateFirst(query, Update.update("certificateImg",certificateInfo.getCertificateImg()), CertificateInfo.class);
+    }
 }

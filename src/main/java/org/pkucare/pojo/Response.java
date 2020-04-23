@@ -1,5 +1,7 @@
 package org.pkucare.pojo;
 
+import org.pkucare.pojo.constant.ResultCode;
+
 /**
  * Created by weiqin on 2019/6/14.
  */
@@ -15,9 +17,18 @@ public class Response<T> {
     private String message;
 
     public Response() {
+        this(ResultCode.SUCCESS);
+    }
+
+    public Response(ResultCode resultCode) {
         this.data = null;
-        this.code = SUCCESS;
-        this.message = "success";
+        this.code = resultCode.code;
+        this.message = resultCode.message;
+    }
+
+    public void setResultCode(ResultCode resultCode){
+        this.code = resultCode.code;
+        this.message = resultCode.message;
     }
 
     public T getData() {
@@ -42,5 +53,13 @@ public class Response<T> {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public static Response SUCCESS(){
+        return new Response(ResultCode.SUCCESS);
+    }
+
+    public static Response ERROR(){
+        return new Response(ResultCode.ERROR);
     }
 }

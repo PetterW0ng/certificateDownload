@@ -4,9 +4,11 @@ import com.taobao.api.ApiException;
 import org.pkucare.annotation.RequestLimit;
 import org.pkucare.exception.RequestLimitException;
 import org.pkucare.exception.ValidateException;
+import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.AdURL;
 import org.pkucare.pojo.constant.Constant;
+import org.pkucare.pojo.constant.ResultCode;
 import org.pkucare.service.CertificateService;
 import org.pkucare.service.VerificationService;
 import org.pkucare.util.MessageDigestUtil;
@@ -29,11 +31,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户下载证书
@@ -55,6 +56,9 @@ public class CertificateController {
 
     @Value("${certificate.file.data.path}")
     private String dataPath;
+
+    @Value("${user.certificate.img.path}")
+    private String userImgPath;
 
     /**
      * 获取下载地址
@@ -218,6 +222,36 @@ public class CertificateController {
         ModelAndView mv = new ModelAndView("success");
         mv.getModel().put("message", "共导入数据 " + (importCount-1) + " 条");
         return mv;
+    }
+
+    @RequestMapping(value = "/uploadHeadImg", method = RequestMethod.POST)
+    public Response uploadHeadImg(@RequestParam("file") MultipartFile file, @RequestParam String idCard, @RequestParam String certificateType) throws IOException {
+        Response response = Response.SUCCESS();
+        // 先判断 证件照是否合规
+        if(!"image/png".equals(file.getContentType())){
+            response.setResultCode(ResultCode.FILE_TYPE_UNSUITABLE);
+        }else if(1024*1024 < file.getSize()){
+            response.setResultCode(ResultCode.FILE_SIZE_UNSUITABLE);
+        }else{
+            // 校验是否考过
+            List<CertificateInfo> certificateInfoList = certificateService.queryCertByIdCard(idCard).stream().filter(e -> e.getSerialNum().indexOf("BISA") > -1).collect(Collectors.toList());
+            if(certificateInfoList.size() == 0){
+                response.setResultCode(ResultCode.NO_IDCARD);
+            }else {
+                // 保存图片
+                String originalFileName = file.getOriginalFilename();
+                String suffix = originalFileName.substring(originalFileName.lastIndexOf("."));
+                String fileName = idCard + "_" + certificateType + suffix;
+                File desFile = new File(userImgPath + fileName);
+                file.transferTo(desFile);
+                // 添加人员的 绑定关系
+                CertificateInfo certificateInfo = certificateInfoList.get(0);
+                certificateInfo.setCertificateImg(fileName);
+                certificateService.modify(certificateInfo);
+                logger.info("身份证 idCard = {}, 上传了 证件照片 = {}", idCard, fileName);
+            }
+        }
+        return response;
     }
 
     @RequestMapping(value = "/adClick", method = RequestMethod.POST)

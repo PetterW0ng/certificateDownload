@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>查询/下载证书</title>
+    <style type="text/css">
+        body {
+            background-color: #999;
+        }
+    </style>
+    <link rel="stylesheet" href="bootstrap-4.3.1/css/bootstrap.min.css">
+    <script src="jquery/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap-4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center">
+    <h3>上传证件照</h3>
+</div>
+<div class="container">
+    <!-- Tab panes -->
+    <div id="certificateDownloadByPhone" class="container tab-pane active"><br>
+        <form class="form-horizontal needs-validation" enctype="multipart/form-data" novalidate >
+            <input type="text" class="form-control" name="idCard" maxlength="18" required placeholder="身份证号"/>
+            <input type="hidden" value="1" name="certificateType" placeholder="证书类型"/>
+            <br/>
+            <input type="file" name="file" class="form-control" accept="image/png" required placeholder="证件照片选择" onchange="verificationImg(this)" />
+            <br/><br/><br/><br/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="subBtn" >
+                上传照片
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function ($) {
+        var forms = $('.needs-validation');
+        var validation = Array.prototype.filter.call(forms, function (form) {
+            form.subBtn.addEventListener('click', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }else {
+                    // ajax 提交 form 表单
+                    $.ajax({
+                        url: '/cert/uploadHeadImg',
+                        type: 'POST',
+                        cache: false,
+                        data: new FormData(forms[0]),
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            alert(res.message);
+                        }
+                    });
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+
+    function verificationImg(file) {
+        // 1、验证类型
+        if(verificationFileType(file)){
+            // 2、验证大小
+            if(verificationFileSize(file)){
+                // 3、验证尺寸
+                return true;
+                // if(verificationFileWidth(file)){
+                //     return true;
+                // }
+            }
+        }
+        return false;
+    }
+
+    function verificationFileType(file) {
+        var fileTypes = ".png";
+        var filePath = file.value;
+        var fileEnd = filePath.substring(filePath.indexOf("."));
+        if (fileTypes == fileEnd) {
+            return true;
+        }else {
+            alert('文件类型只能为 png 格式！');
+            file.value = "";
+            return false;
+        }
+    }
+
+    function verificationFileSize(file) {
+        var fileMaxSize = 1024;//1M
+        var fileSize =file.files[0].size;
+        var size = fileSize / 1024;
+        if (size > fileMaxSize) {
+            alert("文件大小不能大于 1 M！");
+            file.value = "";
+            return false;
+        }
+        return true;
+    }
+
+    function verificationFileWidth(file) {
+        //读取图片数据
+        var filePic = file.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var data = e.target.result;
+            //加载图片获取图片真实宽度和高度
+            var image = new Image();
+            image.onload=function(){
+                var width = image.width, height = image.height;
+                if (width == 413 | height == 531){
+                    console.log("width :" + width + ",height: "+ height);
+                }else {
+                    file.value = "";
+                    alert("文件尺寸应为： 413*531 ！");
+                    return false;
+                }
+            };
+            image.src= data;
+        };
+        reader.readAsDataURL(filePic);
+    }
+</script>
+</body>
+</html>

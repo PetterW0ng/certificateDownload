@@ -54,6 +54,19 @@ public class CertificateInfo {
 
     private String createTime;
 
+    /**
+     * 证件照片
+     */
+    private String certificateImg;
+
+    public String getCertificateImg() {
+        return certificateImg;
+    }
+
+    public void setCertificateImg(String certificateImg) {
+        this.certificateImg = certificateImg;
+    }
+
     public String getIdCard() {
         return idCard;
     }
