@@ -25,7 +25,9 @@
             <input type="text" class="form-control" name="idCard" maxlength="18" required placeholder="身份证号"/>
             <input type="hidden" value="1" name="certificateType" placeholder="证书类型"/>
             <br/>
-            <input type="file" name="file" class="form-control" accept="image/png" required placeholder="证件照片选择" onchange="verificationImg(this)" />
+            <input type="file" name="file" class="form-control" accept="image/png,image/jpg" required placeholder="证件照片选择" onchange="verificationImg(this)" />
+            <br/>
+            <small color="red">注意：只允许上传 png或jpg 格式的图片，大小不应超出1M，且尺寸为 413*531 的图片</small>
             <br/><br/><br/><br/>
             <button class="btn btn-lg btn-primary btn-block" type="submit" id="subBtn" >
                 上传照片
@@ -69,23 +71,21 @@
             // 2、验证大小
             if(verificationFileSize(file)){
                 // 3、验证尺寸
-                return true;
-                // if(verificationFileWidth(file)){
-                //     return true;
-                // }
+                if(verificationFileWidth(file)){
+                    return true;
+                }
             }
         }
         return false;
     }
 
     function verificationFileType(file) {
-        var fileTypes = ".png";
         var filePath = file.value;
         var fileEnd = filePath.substring(filePath.indexOf("."));
-        if (fileTypes == fileEnd) {
+        if (".png" == fileEnd || ".jpg" == fileEnd) {
             return true;
         }else {
-            alert('文件类型只能为 png 格式！');
+            alert('文件类型只能为 png 或 jpg 格式！');
             file.value = "";
             return false;
         }

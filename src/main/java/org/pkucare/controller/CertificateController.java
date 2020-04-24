@@ -228,7 +228,10 @@ public class CertificateController {
     public Response uploadHeadImg(@RequestParam("file") MultipartFile file, @RequestParam String idCard, @RequestParam String certificateType) throws IOException {
         Response response = Response.SUCCESS();
         // 先判断 证件照是否合规
-        if(!"image/png".equals(file.getContentType())){
+        String originalFileName = file.getOriginalFilename();
+        String suffix = originalFileName.substring(originalFileName.lastIndexOf("."));
+        boolean matchType = ".png".equals(suffix) || ".jpg".equals(suffix);
+        if(!matchType){
             response.setResultCode(ResultCode.FILE_TYPE_UNSUITABLE);
         }else if(1024*1024 < file.getSize()){
             response.setResultCode(ResultCode.FILE_SIZE_UNSUITABLE);
@@ -239,8 +242,6 @@ public class CertificateController {
                 response.setResultCode(ResultCode.NO_IDCARD);
             }else {
                 // 保存图片
-                String originalFileName = file.getOriginalFilename();
-                String suffix = originalFileName.substring(originalFileName.lastIndexOf("."));
                 String fileName = idCard + "_" + certificateType + suffix;
                 File desFile = new File(userImgPath + fileName);
                 file.transferTo(desFile);
