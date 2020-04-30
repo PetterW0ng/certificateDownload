@@ -1,14 +1,11 @@
 package org.pkucare.controller;
 
 import com.taobao.api.ApiException;
-import org.pkucare.annotation.RequestLimit;
 import org.pkucare.exception.RequestLimitException;
 import org.pkucare.exception.ValidateException;
-import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.AdURL;
 import org.pkucare.pojo.constant.Constant;
-import org.pkucare.pojo.constant.ResultCode;
 import org.pkucare.service.CertificateService;
 import org.pkucare.service.VerificationService;
 import org.pkucare.util.MessageDigestUtil;
@@ -31,10 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 用户下载证书
@@ -57,8 +55,6 @@ public class CertificateController {
     @Value("${certificate.file.data.path}")
     private String dataPath;
 
-    @Value("${user.certificate.img.path}")
-    private String userImgPath;
 
     /**
      * 获取下载地址
@@ -77,7 +73,7 @@ public class CertificateController {
         String code = verificationService.getVerification(phone);
         if (verificationCode.equals(code)) {
             // 2、下发下载证书的地址, 从缓存中获取
-            String url = "/cert/queryCertByPhone?phone=" + phone +"&sign=" + MessageDigestUtil.md5(phone);
+            String url = "/cert/queryCertByPhone?phone=" + phone + "&sign=" + MessageDigestUtil.md5(phone);
             logger.warn("手机号[{}]输入的验证码[{}]--正确！", phone, verificationCode);
             response.setData(url);
         } else {
@@ -183,10 +179,10 @@ public class CertificateController {
      * @throws IOException
      */
     @RequestMapping(value = "/queryCertByPhone", method = RequestMethod.GET)
-    public ModelAndView queryCertByPhone(@RequestParam(required = false) String phone,@RequestParam(required = false) String sign) throws ValidateException {
+    public ModelAndView queryCertByPhone(@RequestParam(required = false) String phone, @RequestParam(required = false) String sign) throws ValidateException {
         if (!PatternUtil.testPhone(phone) || StringUtils.isEmpty(sign)) {
             throw new ValidateException();
-        }else if(!sign.equals(MessageDigestUtil.md5(phone))){
+        } else if (!sign.equals(MessageDigestUtil.md5(phone))) {
             throw new ValidateException("非法操作，签名错误！");
         }
         ModelAndView mv = new ModelAndView("certificate");
@@ -220,39 +216,8 @@ public class CertificateController {
         Integer importCount = certificateService.excel2Mongo(file);
         logger.info("结束上传文件 fileName ={}，共新增数据 {} 条", file.getName(), importCount);
         ModelAndView mv = new ModelAndView("success");
-        mv.getModel().put("message", "共导入数据 " + (importCount-1) + " 条");
+        mv.getModel().put("message", "共导入数据 " + importCount + " 条");
         return mv;
-    }
-
-    @RequestMapping(value = "/uploadHeadImg", method = RequestMethod.POST)
-    public Response uploadHeadImg(@RequestParam("file") MultipartFile file, @RequestParam String idCard, @RequestParam String certificateType) throws IOException {
-        Response response = Response.SUCCESS();
-        // 先判断 证件照是否合规
-        String originalFileName = file.getOriginalFilename();
-        String suffix = originalFileName.substring(originalFileName.lastIndexOf("."));
-        boolean matchType = ".png".equals(suffix) || ".jpg".equals(suffix);
-        if(!matchType){
-            response.setResultCode(ResultCode.FILE_TYPE_UNSUITABLE);
-        }else if(1024*1024 < file.getSize()){
-            response.setResultCode(ResultCode.FILE_SIZE_UNSUITABLE);
-        }else{
-            // 校验是否考过
-            List<CertificateInfo> certificateInfoList = certificateService.queryCertByIdCard(idCard).stream().filter(e -> e.getSerialNum().indexOf("BISA") > -1).collect(Collectors.toList());
-            if(certificateInfoList.size() == 0){
-                response.setResultCode(ResultCode.NO_IDCARD);
-            }else {
-                // 保存图片
-                String fileName = idCard + "_" + certificateType + suffix;
-                File desFile = new File(userImgPath + fileName);
-                file.transferTo(desFile);
-                // 添加人员的 绑定关系
-                CertificateInfo certificateInfo = certificateInfoList.get(0);
-                certificateInfo.setCertificateImg(fileName);
-                certificateService.modify(certificateInfo);
-                logger.info("身份证 idCard = {}, 上传了 证件照片 = {}", idCard, fileName);
-            }
-        }
-        return response;
     }
 
     @RequestMapping(value = "/adClick", method = RequestMethod.POST)

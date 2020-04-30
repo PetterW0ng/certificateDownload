@@ -25,7 +25,7 @@
             <input type="text" class="form-control" name="idCard" maxlength="18" required placeholder="身份证号"/>
             <input type="hidden" value="1" name="certificateType" placeholder="证书类型"/>
             <br/>
-            <input type="file" name="file" class="form-control" accept="image/png,image/jpg" required placeholder="证件照片选择" onchange="verificationImg(this)" />
+            <input type="file" name="file" class="form-control" accept="image/png, image/jpg" required placeholder="证件照片选择" onchange="verificationImg(this)" />
             <br/>
             <small color="red">注意：只允许上传 png或jpg 格式的图片，大小不应超出1M，且尺寸为 413*531 的图片</small>
             <br/><br/><br/><br/>
@@ -47,14 +47,18 @@
                 }else {
                     // ajax 提交 form 表单
                     $.ajax({
-                        url: '/cert/uploadHeadImg',
+                        url: '/certIDPhoto/uploadHeadImg',
                         type: 'POST',
                         cache: false,
                         data: new FormData(forms[0]),
                         processData: false,
                         contentType: false,
                         success: function (res) {
-                            alert(res.message);
+                            if(res.code == 0){
+                                alert(res.data);
+                            }else {
+                                alert(res.message);
+                            }
                         }
                     });
                     event.preventDefault();

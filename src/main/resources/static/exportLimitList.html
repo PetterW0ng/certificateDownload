@@ -16,18 +16,18 @@
 </head>
 <body>
 <div class="jumbotron text-center">
-    <h3>上传考证人员名单</h3>
+    <h3>导出证件照的上传情况名单</h3>
     <!--<p>Resize this responsive page to see the effect!</p>-->
 </div>
 <div class="container">
     <!-- Tab panes -->
     <div id="certificateDownloadByPhone" class="container tab-pane active"><br>
-        <form method="post" class="form-horizontal needs-validation" action="/cert/uploadFile" enctype="multipart/form-data" novalidate>
-            <input type="file" name="file" class="form-control" required accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="选择文件" >
+        <form class="form-horizontal needs-validation" action="/certIDPhoto/exportLimitList" method="post" novalidate>
+            <input type="number" name="batchNum" required class="form-control" placeholder="批次号" >
             <br/>
             <br/>
             <button class="btn btn-lg btn-primary btn-block" id="subBtn" type="submit">
-                上传人员
+                导出列表
             </button>
         </form>
     </div>
@@ -41,7 +41,25 @@
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
-                }
+                }/*else {
+                    // ajax 提交 form 表单
+                    $.ajax({
+                        url: '/certIDPhoto/exportLimitList',
+                        type: 'POST',
+                        data: $(forms[0]).serialize(),
+                        success: function (res) {
+                            console.log(res);
+                            let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+                            var link = document.createElement('a')
+                            link.href = window.URL.createObjectURL(blob)
+                            link.download = fileName
+                            link.click()
+                            window.URL.revokeObjectURL(link.href)
+                        }
+                    });
+                    event.preventDefault();
+                    event.stopPropagation();
+                }*/
                 form.classList.add('was-validated');
             }, false);
         });

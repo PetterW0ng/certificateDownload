@@ -98,9 +98,10 @@ public class CertificateService {
             DecimalFormat df = new DecimalFormat("0");
             CertificateInfo certificateInfo = null;
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
-            for (Row row : sheet) {
+            for (int i = 1; i < sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
                 String phone = "";
-                if(row.getCell(3) == null) {
+                if (row.getCell(3) == null) {
                     break;
                 }
                 if (row.getCell(3).getCellType() == CellType.NUMERIC) {
@@ -120,13 +121,13 @@ public class CertificateService {
                 certificateInfo.setFileName(row.getCell(4).getStringCellValue().trim());
                 certificateInfo.setPhone(phone);
                 Cell idCardCell = row.getCell(8);
-                if(null != idCardCell){
+                if (null != idCardCell) {
                     certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }
 
                 certificateInfoList.add(certificateInfo);
             }
-            certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis()/1000));
+            certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
             certificateRepository.insert(certificateInfoList);
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
             return certificateInfoList.size();
@@ -145,6 +146,6 @@ public class CertificateService {
 
     public void modify(CertificateInfo certificateInfo) {
         Query query = new Query(Criteria.where("serialNum").is(certificateInfo.getSerialNum()));
-        mongoTemplate.updateFirst(query, Update.update("certificateImg",certificateInfo.getCertificateImg()), CertificateInfo.class);
+        mongoTemplate.updateFirst(query, Update.update("certificateImg", certificateInfo.getCertificateImg()), CertificateInfo.class);
     }
 }
