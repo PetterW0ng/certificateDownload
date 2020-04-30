@@ -29,6 +29,9 @@
             <button class="btn btn-lg btn-primary btn-block" id="subBtn" type="submit">
                 导出列表
             </button>
+            <a class="btn btn-lg btn-primary btn-block" href="uploadLimitList.html">
+                上传人员名单
+            </a>
         </form>
     </div>
 </div>
@@ -41,25 +44,7 @@
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
-                }/*else {
-                    // ajax 提交 form 表单
-                    $.ajax({
-                        url: '/certIDPhoto/exportLimitList',
-                        type: 'POST',
-                        data: $(forms[0]).serialize(),
-                        success: function (res) {
-                            console.log(res);
-                            let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
-                            var link = document.createElement('a')
-                            link.href = window.URL.createObjectURL(blob)
-                            link.download = fileName
-                            link.click()
-                            window.URL.revokeObjectURL(link.href)
-                        }
-                    });
-                    event.preventDefault();
-                    event.stopPropagation();
-                }*/
+                }
                 form.classList.add('was-validated');
             }, false);
         });
