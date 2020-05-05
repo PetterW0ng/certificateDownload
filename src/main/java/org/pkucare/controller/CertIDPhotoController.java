@@ -1,6 +1,5 @@
 package org.pkucare.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import org.pkucare.pojo.CertIDPhoto;
 import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.Constant;
@@ -10,18 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/certIDPhoto"})
@@ -78,10 +74,10 @@ public class CertIDPhotoController {
                 response.setResultCode(ResultCode.NOT_WITHIN_UPLOAD_TIME);
             } else {
                 // 保存图片
-                String fileName =  idCard + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG;
+                String fileName =  idCard + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG_TYPE;
                 File desFile = new File(userImgPath + fileName);
                 BufferedImage input = ImageIO.read(file.getInputStream());
-                ImageIO.write(input, Constant.CERTIFICATE_HEAD_IMG, desFile);
+                ImageIO.write(input, Constant.CERTIFICATE_HEAD_IMG_TYPE, desFile);
                 // 添加人员的 绑定关系
                 certIDPhoto.setUploaded(Boolean.TRUE);
                 certIDPhotoService.modify(certIDPhoto);

@@ -21,7 +21,7 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
                 "    \"userName\" : \"扩木那\", \n" +
                 "    \"serialNum\" : \"BISA-210404199602290023\", \n" +
                 "    \"certificateName\" : \"ABA孤独症康复专业技能培训证书\", \n" +
-                "    \"issueTime\" : \"2019.10.25\", \n" +
+                "    \"issueTime\" : \"2020.10.25\", \n" +
                 "    \"idCard\" : \"350524197805190041\", \n" +
                 "    \"issuingUnit\" : \"中国残疾人联合会社会服务指导中心、北医脑健康行为发展教研院\", \n" +
                 "    \"fileName\" : \"CF6A1F8248B765F5576D0A7A5A630C34\", \n" +

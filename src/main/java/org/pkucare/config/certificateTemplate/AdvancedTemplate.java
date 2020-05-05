@@ -1,11 +1,10 @@
 package org.pkucare.config.certificateTemplate;
 
 import com.google.zxing.WriterException;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xslf.usermodel.*;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
 import org.openxmlformats.schemas.drawingml.x2006.main.impl.CTRegularTextRunImpl;
-import org.openxmlformats.schemas.drawingml.x2006.picture.impl.CTPictureImpl;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.constant.Constant;
 import org.pkucare.util.MessageDigestUtil;
@@ -53,7 +52,6 @@ public class AdvancedTemplate extends CertificateTemplate {
         logger.info("开始生成证书 certificateInfo = {}, advancedCertificatePath = {}", certificateInfo, advancedCertificatePath);
         // 生成证书名称
         String certName = MessageDigestUtil.getCertificateName(certificateInfo.getSerialNum());
-        File file = new File("c:\\work\\demo.pptx");
         XMLSlideShow ppt = new XMLSlideShow(FILE_INPUT_STREAM_ADVANCED);
         XSLFSlide slide = ppt.getSlides().get(0);
         List<XSLFShape> shapeList = slide.getShapes();
@@ -75,36 +73,37 @@ public class AdvancedTemplate extends CertificateTemplate {
                     try {
                         BufferedImage bufferedImage = QrCodeUtil.getQrCodeStream(super.getBaseUrl() + "/cert/" + certificateInfo.getSerialNum());
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+                        ImageIO.write(bufferedImage, Constant.CERTIFICATE_HEAD_IMG_TYPE, byteArrayOutputStream);
                         xslfPictureShape.getPictureData().setData(byteArrayOutputStream.toByteArray());
                     } catch (WriterException e) {
                         logger.error("证书上二维码生成错误！", e);
                     }
                 }else if(shape.getShapeName().equals(PlaceHolderName.certificateImg.name())){
-                    String fileName = certificateInfo.getIdCard() + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG;
+                    String fileName = certificateInfo.getIdCard() + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG_TYPE;
                     File userImg = ResourceUtils.getFile(userImgPath + fileName);
-                    BufferedImage input = ImageIO.read(userImg);
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    ImageIO.write(input, "png", byteArrayOutputStream);
-                    xslfPictureShape.getPictureData().setData(byteArrayOutputStream.toByteArray());
+                    xslfPictureShape.getPictureData().setData(IOUtils.toByteArray(new FileInputStream(userImg)));
                 }
             }
         }
-        //saving the changes
-        FileOutputStream out = new FileOutputStream(file);
+        // 保存目标 pptx 文件
+        //ppt.write(new FileOutputStream(advancedCertificatePath + "generited.pptx"));
+        // 保存图片
         Dimension onePPTPageSize = ppt.getPageSize();
-        BufferedImage oneBufferedImage = new BufferedImage(onePPTPageSize.width,
-                onePPTPageSize.height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D oneGraphics2D = oneBufferedImage.createGraphics();
+        int times = 5;
+        BufferedImage certificateImg = new BufferedImage(onePPTPageSize.width * times,
+                onePPTPageSize.height * times, BufferedImage.TYPE_INT_RGB);
+        Graphics2D oneGraphics2D = certificateImg.createGraphics();
         // 设置转换后的图片背景色为白色
         oneGraphics2D.setPaint(Color.white);
         // 将图片放大times倍
-        // oneGraphics2D.scale(times, times);
-        oneGraphics2D.fill(new Rectangle2D.Float(0, 0, onePPTPageSize.width , onePPTPageSize.height));
-        // slide.draw(oneGraphics2D);
-        ppt.write(out);
-        System.out.println("Presentation edited successfully");
-        out.close();
+        oneGraphics2D.scale(times, times);
+        oneGraphics2D.fill(new Rectangle2D.Float(0, 0, onePPTPageSize.width * times, onePPTPageSize.height * times));
+        slide.draw(oneGraphics2D);
+        String fileName = certName + Constant.DOT + Constant.CERTIFICATE_IMG_TYPE;
+        File file = new File(advancedCertificatePath + fileName);
+        ImageIO.write(certificateImg, Constant.CERTIFICATE_IMG_TYPE, file);
+
+        logger.info("结束生成证书 certName ={}", certName);
     }
 
 
