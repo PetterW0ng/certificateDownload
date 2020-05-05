@@ -3,6 +3,7 @@ package org.pkucare.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.pkucare.pojo.CertIDPhoto;
 import org.pkucare.pojo.Response;
+import org.pkucare.pojo.constant.Constant;
 import org.pkucare.pojo.constant.ResultCode;
 import org.pkucare.service.CertIDPhotoService;
 import org.slf4j.Logger;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -75,9 +78,10 @@ public class CertIDPhotoController {
                 response.setResultCode(ResultCode.NOT_WITHIN_UPLOAD_TIME);
             } else {
                 // 保存图片
-                String fileName = idCard + suffix;
+                String fileName =  idCard + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG;
                 File desFile = new File(userImgPath + fileName);
-                file.transferTo(desFile);
+                BufferedImage input = ImageIO.read(file.getInputStream());
+                ImageIO.write(input, Constant.CERTIFICATE_HEAD_IMG, desFile);
                 // 添加人员的 绑定关系
                 certIDPhoto.setUploaded(Boolean.TRUE);
                 certIDPhotoService.modify(certIDPhoto);

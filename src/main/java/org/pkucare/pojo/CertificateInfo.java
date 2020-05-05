@@ -138,4 +138,20 @@ public class CertificateInfo {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
+    @Override
+    public String toString() {
+        return "CertificateInfo{" +
+                "userName='" + userName + '\'' +
+                ", serialNum='" + serialNum + '\'' +
+                ", certificateName='" + certificateName + '\'' +
+                ", issueTime='" + issueTime + '\'' +
+                ", issuingUnit='" + issuingUnit + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", certificateImg='" + certificateImg + '\'' +
+                '}';
+    }
 }

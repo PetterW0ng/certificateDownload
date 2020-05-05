@@ -12,6 +12,8 @@ public class MessageDigestUtil {
 
     private static final String key = "5O1WZZY916UC4JYQ";
 
+    private static final String CERTIFICATE_KEY = "M3240YELWIVWW0LQ";
+
     /**
      * 根据字符串生成 md5 值
      *
@@ -25,6 +27,19 @@ public class MessageDigestUtil {
             value = value + key;
             md = MessageDigest.getInstance("MD5");
             md.update(value.getBytes());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new BigInteger(1, md.digest()).toString(16).toUpperCase();
+    }
+
+    public static String getCertificateName(String seriNum) {
+
+        MessageDigest md = null;
+        try {
+            seriNum = seriNum + CERTIFICATE_KEY;
+            md = MessageDigest.getInstance("MD5");
+            md.update(seriNum.getBytes());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

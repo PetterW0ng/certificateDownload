@@ -12,13 +12,14 @@
 	<artifactId>certificate</artifactId>
 	<version>0.0.2</version>
 	<name>certificate-download</name>
-	<description>微信公众号问卷调查(童老师)</description>
+	<description>北大医疗脑健康-证书服务</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<fastjson.version>1.2.7</fastjson.version>
 		<poi.version>4.1.0</poi.version>
 		<poi-ooxml.version>4.1.0</poi-ooxml.version>
+		<google-zxing.version>3.3.3</google-zxing.version>
 	</properties>
 
 	<dependencies>
@@ -78,6 +79,17 @@
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${google-zxing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>${google-zxing.version}</version>
 		</dependency>
 	</dependencies>
 
