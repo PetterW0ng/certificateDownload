@@ -17,13 +17,12 @@
 <body>
 <div class="jumbotron text-center">
     <h3>上传可以提交证件照的名单</h3>
-    <!--<p>Resize this responsive page to see the effect!</p>-->
 </div>
 <div class="container">
     <!-- Tab panes -->
     <div id="certificateDownloadByPhone" class="container tab-pane active"><br>
         <form method="post" class="form-horizontal needs-validation" action="/certIDPhoto/uploadLimitList" enctype="multipart/form-data" novalidate>
-            <input type="file" name="file" required class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="选择文件" >
+            <input type="file" name="file" required class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="选择文件" ><a href="template/允许上传的证件照列表模板.xlsx" target="_blank">下载模板</a>
             <br/>
             <br/>
             <button class="btn btn-lg btn-primary btn-block" id="subBtn" type="submit">

@@ -1,10 +1,9 @@
 package org.pkucare.config.certificateTemplate;
 
-import com.google.zxing.WriterException;
 import org.pkucare.pojo.CertificateInfo;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.*;
+import java.io.IOException;
 
 public abstract class CertificateTemplate {
 
@@ -15,13 +14,13 @@ public abstract class CertificateTemplate {
         return baseUrl;
     }
 
-    public void initTemplate(){
+    protected void initTemplate() {
 
     }
 
-    public abstract void generateCertificateImg(CertificateInfo certificateInfo) throws IOException;
+    protected abstract void generateCertificateImg(CertificateInfo certificateInfo) throws IOException;
 
-    public final void generateCertificate(CertificateInfo certificateInfo){
+    public final void generateCertificate(CertificateInfo certificateInfo) {
         // 初始化模板引擎
         initTemplate();
         // 填充模板
@@ -32,7 +31,7 @@ public abstract class CertificateTemplate {
         }
     }
 
-    enum PlaceHolderName{
+    enum PlaceHolderName {
         qrCode,
         certificateImg,
         issueTime,

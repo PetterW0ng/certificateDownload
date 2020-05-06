@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertIDPhoto;
 import org.pkucare.repository.CertIDPhotoRepository;
 import org.pkucare.util.ExcelUtil;
@@ -30,7 +31,7 @@ public class CertIDPhotoService {
     private CertIDPhotoRepository certIDPhotoRepository;
 
 
-    public Integer importExcel2Mongo(MultipartFile mFile) {
+    public Integer importExcel2Mongo(MultipartFile mFile) throws ValidateException {
         // 加载数据到缓存里面
         InputStream file = null;
         try {
@@ -40,7 +41,7 @@ public class CertIDPhotoService {
             DecimalFormat df = new DecimalFormat("0");
             CertIDPhoto certIDPhoto = null;
             List<CertIDPhoto> certificateInfoList = new ArrayList<>();
-            for (int i = 1; i < sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row.getCell(2) == null || "".equals(row.getCell(2).getStringCellValue())) {
                     break;
@@ -48,7 +49,7 @@ public class CertIDPhotoService {
                 certIDPhoto = new CertIDPhoto();
                 certIDPhoto.setUserName(row.getCell(1).getStringCellValue().trim());
                 certIDPhoto.setSerialNum(row.getCell(2).getStringCellValue().trim());
-                certIDPhoto.setPhone(row.getCell(3).getStringCellValue());
+                certIDPhoto.setPhone(row.getCell(3).getStringCellValue().trim());
                 certIDPhoto.setIdCard(row.getCell(4).getStringCellValue().trim());
                 certIDPhoto.setCertificateName(row.getCell(5).getStringCellValue().trim());
                 certIDPhoto.setBeginTime(row.getCell(6).getDateCellValue());
@@ -60,8 +61,8 @@ public class CertIDPhotoService {
             certIDPhotoRepository.saveAll(certificateInfoList);
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
             return certificateInfoList.size();
-        } catch (IOException e) {
-            throw new RuntimeException("初始化文件数据时失败了！！！");
+        } catch (Exception e) {
+            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 原因：" + e.getMessage(), e);
         } finally {
             if (file != null) {
                 try {
@@ -82,7 +83,7 @@ public class CertIDPhotoService {
 
     public void exportData2Excel(HttpServletResponse response, String batchNum) {
         List<CertIDPhoto> certIDPhotoList = certIDPhotoRepository.queryAllByBatchNum(Double.valueOf(batchNum));
-        String fileName = "证件照上传情况第"+Integer.valueOf(batchNum)+"批次", sheetName = "证件照上传情况";
+        String fileName = "证件照上传情况第" + Integer.valueOf(batchNum) + "批次", sheetName = "证件照上传情况";
         ExcelUtil.export(fileName, sheetName, certIDPhotoList, response);
     }
 }

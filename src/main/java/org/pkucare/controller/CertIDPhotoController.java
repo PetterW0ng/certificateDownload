@@ -1,5 +1,6 @@
 package org.pkucare.controller;
 
+import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertIDPhoto;
 import org.pkucare.pojo.Response;
 import org.pkucare.pojo.constant.Constant;
@@ -34,7 +35,7 @@ public class CertIDPhotoController {
      * 导入 需要上传的人员列表
      */
     @RequestMapping(value = "/uploadLimitList", method = RequestMethod.POST)
-    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) throws ValidateException {
         logger.info("开始上传文件 fileName ={}", file.getOriginalFilename());
         Integer importCount = certIDPhotoService.importExcel2Mongo(file);
         logger.info("结束上传文件 fileName ={}，共新增数据 {} 条", file.getName(), importCount);

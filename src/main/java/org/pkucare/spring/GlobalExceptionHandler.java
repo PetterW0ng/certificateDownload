@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     Response handleException(ApiException e) {
         e.printStackTrace();
         Response response = new Response<String>();
-        response.setData("短信发送失败了");
+        response.setData("");
         response.setCode(500);
         response.setMessage("短信发送失败了");
         logger.error("后台出错了", e);
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     Response handleRequestLimitException(RequestLimitException e) {
         Response response = new Response<String>();
-        response.setData(e.getMessage());
+        response.setData("");
         response.setCode(1001);
         response.setMessage(e.getMessage());
         logger.warn("访问超出限制", e);
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     Response handleRequestValidateException(ValidateException e) {
         Response response = new Response<String>();
-        response.setData(e.getMessage());
+        response.setData("");
         response.setCode(1002);
         response.setMessage(e.getMessage());
         logger.warn("参数错误", e);

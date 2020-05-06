@@ -3,6 +3,7 @@ package org.pkucare.service;
 import com.mongodb.BasicDBObject;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.repository.CertificateRepository;
 import org.slf4j.Logger;
@@ -33,6 +34,9 @@ public class CertificateService {
 
     @Autowired
     private CertificateRepository certificateRepository;
+
+    @Autowired
+    private GenerateCertService generateCertService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -88,7 +92,7 @@ public class CertificateService {
      *
      * @return
      */
-    public Integer excel2Mongo(MultipartFile mFile) {
+    public Integer excel2Mongo(MultipartFile mFile) throws ValidateException {
         // 加载数据到缓存里面
         InputStream file = null;
         try {
@@ -98,7 +102,7 @@ public class CertificateService {
             DecimalFormat df = new DecimalFormat("0");
             CertificateInfo certificateInfo = null;
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
-            for (int i = 1; i < sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 String phone = "";
                 if (row.getCell(3) == null) {
@@ -124,15 +128,16 @@ public class CertificateService {
                 if (null != idCardCell) {
                     certificateInfo.setIdCard(idCardCell.getStringCellValue().trim());
                 }
-
+                certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
                 certificateInfoList.add(certificateInfo);
             }
-            certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
+
             certificateRepository.insert(certificateInfoList);
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
+            generateCertService.generateCertificate(certificateInfoList);
             return certificateInfoList.size();
-        } catch (IOException e) {
-            throw new RuntimeException("初始化文件数据时失败了！！！");
+        } catch (Exception e) {
+            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 原因：" + e.getMessage(), e);
         } finally {
             if (file != null) {
                 try {

@@ -12,6 +12,7 @@ import org.pkucare.util.QrCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -48,6 +49,7 @@ public class AdvancedTemplate extends CertificateTemplate {
     }
 
     @Override
+    @Async
     public void generateCertificateImg(CertificateInfo certificateInfo) throws IOException {
         logger.info("开始生成证书 certificateInfo = {}, advancedCertificatePath = {}", certificateInfo, advancedCertificatePath);
         // 生成证书名称

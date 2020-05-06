@@ -38,7 +38,13 @@ public class Constant {
     public static final String CERTIFICATE_IMG_TYPE = "jpg";
 
     public static final String DOT = ".";
-
+    /**
+     * 行为干预师 证书等级 前缀
+     * 高级：BISA   中级：BISM   初级：BISE
+     */
+    public static final String CERTIFICATE_ADVANCED_PREFIX = "BISA-";
+    public static final String CERTIFICATE_MEDIATE_PREFIX = "BISM-";
+    public static final String CERTIFICATE_ELEMENTARY_PREFIX = "BISE-";
 
 
 }

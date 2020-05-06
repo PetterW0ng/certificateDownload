@@ -211,7 +211,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) throws ValidateException {
         logger.info("开始上传文件 fileName ={}", file.getOriginalFilename());
         Integer importCount = certificateService.excel2Mongo(file);
         logger.info("结束上传文件 fileName ={}，共新增数据 {} 条", file.getName(), importCount);
