@@ -2,6 +2,7 @@ package org.pkucare.service;
 
 import com.mongodb.BasicDBObject;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertificateInfo;
@@ -139,12 +140,7 @@ public class CertificateService {
         } catch (Exception e) {
             throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 原因：" + e.getMessage(), e);
         } finally {
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                }
-            }
+            IOUtils.closeQuietly(file);
         }
 
     }

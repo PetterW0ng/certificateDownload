@@ -33,9 +33,9 @@ public class Constant {
 //    public static final String DAYU_SIGN_PRODUCT = "产品名称";
     public static final String DAYU_SIGN_PRODUCT = "北医脑健康";
 
-    public static final String CERTIFICATE_HEAD_IMG_TYPE = "png";
+    public static final String CERTIFICATE_IMG_TYPE_PNG = "png";
 
-    public static final String CERTIFICATE_IMG_TYPE = "jpg";
+    public static final String CERTIFICATE_IMG_TYPE_JPG = "jpg";
 
     public static final String DOT = ".";
     /**

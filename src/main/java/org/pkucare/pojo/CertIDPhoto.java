@@ -84,6 +84,20 @@ public class CertIDPhoto {
     @CreatedDate
     private Date createTime;
 
+    /**
+     * 证书名称
+     */
+    @ExcelExport(value = "文件名称")
+    private String fileName;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public String getUserName() {
         return userName;
     }

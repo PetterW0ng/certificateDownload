@@ -7,7 +7,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.impl.CTRegularTextRunImpl;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.constant.Constant;
-import org.pkucare.util.MessageDigestUtil;
 import org.pkucare.util.QrCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +33,20 @@ public class AdvancedTemplate extends CertificateTemplate {
 
     private static final String templatePath = "classpath:config/certificate-template/apku-advanced.pptx";
     private static final Logger logger = LoggerFactory.getLogger(AdvancedTemplate.class);
-    private static final InputStream FILE_INPUT_STREAM_ADVANCED;
+    private static final byte[] FILE_INPUT_STREAM_ADVANCED_ARRAY;
 
     static {
-        InputStream FILE_INPUT_STREAM_ADVANCED1 = null;
+        byte[] temp = null;
         try {
             File file = ResourceUtils.getFile(templatePath);
-            FILE_INPUT_STREAM_ADVANCED1 = new FileInputStream(file);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            temp = IOUtils.toByteArray(fileInputStream);
         } catch (FileNotFoundException e) {
             logger.error("模板文件没有找到！");
-            FILE_INPUT_STREAM_ADVANCED1 = null;
+        } catch (IOException e) {
+            logger.error("读取 {} 模板文件失败了！");
         }
-        FILE_INPUT_STREAM_ADVANCED = FILE_INPUT_STREAM_ADVANCED1;
+        FILE_INPUT_STREAM_ADVANCED_ARRAY = temp;
     }
 
     @Override
@@ -53,8 +54,8 @@ public class AdvancedTemplate extends CertificateTemplate {
     public void generateCertificateImg(CertificateInfo certificateInfo) throws IOException {
         logger.info("开始生成证书 certificateInfo = {}, advancedCertificatePath = {}", certificateInfo, advancedCertificatePath);
         // 生成证书名称
-        String certName = MessageDigestUtil.getCertificateName(certificateInfo.getSerialNum());
-        XMLSlideShow ppt = new XMLSlideShow(FILE_INPUT_STREAM_ADVANCED);
+        String certName = certificateInfo.getFileName();
+        XMLSlideShow ppt = new XMLSlideShow(new ByteArrayInputStream(FILE_INPUT_STREAM_ADVANCED_ARRAY));
         XSLFSlide slide = ppt.getSlides().get(0);
         List<XSLFShape> shapeList = slide.getShapes();
         for (XSLFShape shape : shapeList) {
@@ -75,14 +76,14 @@ public class AdvancedTemplate extends CertificateTemplate {
                     try {
                         BufferedImage bufferedImage = QrCodeUtil.getQrCodeStream(super.getBaseUrl() + "/cert/" + certificateInfo.getSerialNum());
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        ImageIO.write(bufferedImage, Constant.CERTIFICATE_HEAD_IMG_TYPE, byteArrayOutputStream);
+                        ImageIO.write(bufferedImage, Constant.CERTIFICATE_IMG_TYPE_PNG, byteArrayOutputStream);
                         XSLFPictureData xslfPictureData = xslfPictureShape.getPictureData();
                         xslfPictureData.setData(byteArrayOutputStream.toByteArray());
                     } catch (WriterException e) {
                         logger.error("证书上二维码生成错误！", e);
                     }
                 } else if (shape.getShapeName().equals(PlaceHolderName.certificateImg.name())) {
-                    String fileName = certificateInfo.getIdCard() + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG_TYPE;
+                    String fileName = certificateInfo.getIdCard() + Constant.DOT + Constant.CERTIFICATE_IMG_TYPE_PNG;
                     File userImg = ResourceUtils.getFile(userImgPath + fileName);
                     xslfPictureShape.getPictureData().setData(IOUtils.toByteArray(new FileInputStream(userImg)));
                 }
@@ -90,7 +91,7 @@ public class AdvancedTemplate extends CertificateTemplate {
         }
 
         // 保存目标 pptx 文件
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024*5);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024 * 5);
         ppt.write(byteArrayOutputStream);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         byteArrayOutputStream = null;
@@ -114,9 +115,9 @@ public class AdvancedTemplate extends CertificateTemplate {
         oneGraphics2D.scale(times, times);
         oneGraphics2D.fill(new Rectangle2D.Float(0, 0, onePPTPageSize.width * times, onePPTPageSize.height * times));
         slide.draw(oneGraphics2D);
-        String fileName = certName + Constant.DOT + Constant.CERTIFICATE_IMG_TYPE;
+        String fileName = certName + Constant.DOT + Constant.CERTIFICATE_IMG_TYPE_JPG;
         File file = new File(advancedCertificatePath + fileName);
-        ImageIO.write(certificateImg, Constant.CERTIFICATE_IMG_TYPE, file);
+        ImageIO.write(certificateImg, Constant.CERTIFICATE_IMG_TYPE_JPG, file);
         byteArrayInputStream = null;
         logger.info("证书图片生成成功！");
     }

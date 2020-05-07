@@ -8,6 +8,7 @@ import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertIDPhoto;
 import org.pkucare.repository.CertIDPhotoRepository;
 import org.pkucare.util.ExcelUtil;
+import org.pkucare.util.MessageDigestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class CertIDPhotoService {
                 certIDPhoto.setEndTime(row.getCell(7).getDateCellValue());
                 certIDPhoto.setBatchNum(row.getCell(8).getNumericCellValue());
                 certIDPhoto.setUploaded(Boolean.FALSE);
+                certIDPhoto.setFileName(MessageDigestUtil.getCertificateName(certIDPhoto.getSerialNum()));
                 certificateInfoList.add(certIDPhoto);
             }
             certIDPhotoRepository.saveAll(certificateInfoList);

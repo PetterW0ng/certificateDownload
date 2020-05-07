@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class QrCodeUtil {
 
-    private static final String logoPath = "classpath:config/certificate-template/logo.png";
+    private static final String logoPath = "classpath:config/certificate-template/logo.jpg";
     /**
      * 生成二维码
      */

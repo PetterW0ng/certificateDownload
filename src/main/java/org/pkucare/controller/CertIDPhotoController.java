@@ -75,10 +75,10 @@ public class CertIDPhotoController {
                 response.setResultCode(ResultCode.NOT_WITHIN_UPLOAD_TIME);
             } else {
                 // 保存图片
-                String fileName =  idCard + Constant.DOT + Constant.CERTIFICATE_HEAD_IMG_TYPE;
+                String fileName =  idCard + Constant.DOT + Constant.CERTIFICATE_IMG_TYPE_PNG;
                 File desFile = new File(userImgPath + fileName);
                 BufferedImage input = ImageIO.read(file.getInputStream());
-                ImageIO.write(input, Constant.CERTIFICATE_HEAD_IMG_TYPE, desFile);
+                ImageIO.write(input, Constant.CERTIFICATE_IMG_TYPE_PNG, desFile);
                 // 添加人员的 绑定关系
                 certIDPhoto.setUploaded(Boolean.TRUE);
                 certIDPhotoService.modify(certIDPhoto);

@@ -3,6 +3,8 @@ package org.pkucare.service;
 import org.pkucare.config.certificateTemplate.CertificateTemplate;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.constant.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,13 +17,15 @@ import java.util.List;
 @Service
 public class GenerateCertService {
 
+    public static final Logger logger = LoggerFactory.getLogger(GenerateCertService.class);
     @Resource(name = "advancedTemplate")
     private CertificateTemplate advancedTemplate;
 
     public void generateCertificate(List<CertificateInfo> certificateInfoList){
 
         certificateInfoList.stream().forEach(certificateInfo -> {
-            if (certificateInfo.getSerialNum().indexOf(Constant.CERTIFICATE_ADVANCED_PREFIX) > 0){
+            if (certificateInfo.getSerialNum().toUpperCase().contains(Constant.CERTIFICATE_ADVANCED_PREFIX)){
+                logger.info("{} 需要生成证书", certificateInfo.getIdCard());
                 advancedTemplate.generateCertificate(certificateInfo);
             }
 
