@@ -8,6 +8,7 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
@@ -17,12 +18,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class QrCodeUtil {
 
-    private static final String logoPath = "classpath:config/certificate-template/logo.jpg";
+    private static final String logoPath = "config/certificate-template/logo.jpg";
     /**
      * 生成二维码
      */
@@ -40,7 +42,7 @@ public class QrCodeUtil {
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints);
         MatrixToImageWriter.writeToPath(bitMatrix, format, new File("C:\\data\\qrcode1.png").toPath());// 输出原图片
         MatrixToImageConfig matrixToImageConfig = new MatrixToImageConfig(0xFF000001, 0xFFFFFFFF);
-        BufferedImage bufferedImage = LogoMatrix(MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig), ResourceUtils.getFile(logoPath));
+        BufferedImage bufferedImage = LogoMatrix(MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig));
 //        BufferedImage bufferedImage = LogoMatrix(toBufferedImage(bitMatrix), new File("D:\\logo.png"));
         ImageIO.write(bufferedImage, "png", new File("C:\\data\\qrCode.png"));//输出带logo图片
     }
@@ -57,7 +59,7 @@ public class QrCodeUtil {
         hints.put(EncodeHintType.MARGIN, 1);
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints);
         MatrixToImageConfig matrixToImageConfig = new MatrixToImageConfig(0xFF000001, 0xFFFFFFFF);
-        BufferedImage bufferedImage = LogoMatrix(MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig), ResourceUtils.getFile(logoPath));
+        BufferedImage bufferedImage = LogoMatrix(MatrixToImageWriter.toBufferedImage(bitMatrix, matrixToImageConfig));
         return bufferedImage;
     }
 
@@ -65,11 +67,10 @@ public class QrCodeUtil {
      * 二维码添加logo
      *
      * @param matrixImage 源二维码图片
-     * @param logoFile    logo图片
      * @return 返回带有logo的二维码图片
      * 参考：https://blog.csdn.net/weixin_39494923/article/details/79058799
      */
-    private static BufferedImage LogoMatrix(BufferedImage matrixImage, File logoFile) throws IOException {
+    private static BufferedImage LogoMatrix(BufferedImage matrixImage) throws IOException {
         /**
          * 读取二维码图片，并构建绘图对象
          */
@@ -79,9 +80,10 @@ public class QrCodeUtil {
         int matrixHeigh = matrixImage.getHeight();
 
         /**
-         * 读取Logo图片
+         * 读取Logo图片 文件流
          */
-        BufferedImage logo = ImageIO.read(logoFile);
+        InputStream logoFileInputStream = new ClassPathResource(logoPath).getInputStream();
+        BufferedImage logo = ImageIO.read(logoFileInputStream);
 
         //开始绘制图片
         g2.drawImage(logo, matrixWidth / 5 * 2, matrixHeigh / 5 * 2, matrixWidth / 5, matrixHeigh / 5, null);//绘制

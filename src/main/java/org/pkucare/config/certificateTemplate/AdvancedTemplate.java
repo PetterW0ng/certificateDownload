@@ -11,6 +11,7 @@ import org.pkucare.util.QrCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -31,18 +32,17 @@ public class AdvancedTemplate extends CertificateTemplate {
     @Value("${user.certificate.img.path}")
     private String userImgPath;
 
-    private static final String templatePath = "classpath:config/certificate-template/apku-advanced.pptx";
+    private static final String templatePath = "config/certificate-template/apku-advanced.pptx";
     private static final Logger logger = LoggerFactory.getLogger(AdvancedTemplate.class);
     private static final byte[] FILE_INPUT_STREAM_ADVANCED_ARRAY;
 
     static {
         byte[] temp = null;
         try {
-            File file = ResourceUtils.getFile(templatePath);
-            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStream fileInputStream = new ClassPathResource(templatePath).getInputStream();
             temp = IOUtils.toByteArray(fileInputStream);
         } catch (FileNotFoundException e) {
-            logger.error("模板文件没有找到！");
+            logger.error("模板文件没有找到！", e);
         } catch (IOException e) {
             logger.error("读取 {} 模板文件失败了！");
         }
