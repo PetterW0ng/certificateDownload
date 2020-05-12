@@ -60,7 +60,13 @@ public class CertIDPhotoController {
         Response response = Response.SUCCESS();
         // 先判断 证件照是否合规
         String originalFileName = file.getOriginalFilename();
-        String suffix = originalFileName.substring(originalFileName.lastIndexOf("."));
+        logger.info(originalFileName);
+        int i = originalFileName.lastIndexOf(".");
+        if (i == -1){
+            response.setResultCode(ResultCode.FILE_TYPE_UNSUITABLE);
+            return response;
+        }
+        String suffix = originalFileName.substring(i);
         boolean matchType = ".png".equals(suffix) || ".jpg".equals(suffix);
         if (!matchType) {
             response.setResultCode(ResultCode.FILE_TYPE_UNSUITABLE);
