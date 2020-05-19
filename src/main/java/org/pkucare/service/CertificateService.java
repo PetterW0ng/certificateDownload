@@ -104,6 +104,7 @@ public class CertificateService {
             CertificateInfo certificateInfo = null;
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                logger.info("解析至第 i = {} 行", i);
                 Row row = sheet.getRow(i);
                 String phone = "";
                 if (row.getCell(3) == null) {
@@ -132,7 +133,6 @@ public class CertificateService {
                 certificateInfo.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
                 certificateInfoList.add(certificateInfo);
             }
-
             certificateRepository.insert(certificateInfoList);
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
             generateCertService.generateCertificate(certificateInfoList);
