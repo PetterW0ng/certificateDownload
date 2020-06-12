@@ -34,73 +34,75 @@
 <div class="container">
     <!-- 证书详情页 -->
     <p class="accordion" id="accordion" th:if="${not #lists.isEmpty(certificateInfoList)}">
-    <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="border:none;padding-bottom: 5px">
-        <a class="card-header list-group-item align-items-start list-group-item-c" data-toggle="collapse"
-           aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}"
-           style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}"
-           th:data-target="'#certificateData' + ${certificateInfoStat.index}"
-           th:href="'#certificateData' + ${certificateInfoStat.index}">
-            <div class="d-flex justify-content-between" style="color: #108EE9">
-                <div class="d-flex mb-1"
-                     th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
+        <div class="card" th:each="certificateInfo : ${certificateInfoList}" style="border:none;padding-bottom: 5px">
+            <a class="card-header list-group-item align-items-start list-group-item-c" data-toggle="collapse"
+               aria-expanded="true" th:aria-controls="'certificateData' + ${certificateInfoStat.index}"
+               style="border: none;padding: 2px 5px" th:id="'certificateHeader' + ${certificateInfoStat.index}"
+               th:data-target="'#certificateData' + ${certificateInfoStat.index}"
+               th:href="'#certificateData' + ${certificateInfoStat.index}">
+                <div class="d-flex justify-content-between" style="color: #108EE9">
+                    <div class="d-flex mb-1"
+                         th:text="${certificateInfo.serialNum}+' - '+${certificateInfo.userName}">
+                    </div>
+                    <div class="fa fa-fw fa-chevron-right">
+                        点击查看&nbsp;&nbsp;&nbsp;<i class="span_sanjiaor" style="height: 10px;"></i>
+                    </div>
                 </div>
-                <div class="fa fa-fw fa-chevron-right">
-                    点击查看&nbsp;&nbsp;&nbsp;<i class="span_sanjiaor" style="height: 10px;"></i>
-                </div>
+            </a>
+            <div class="collapse show" th:id="'certificateData' + ${certificateInfoStat.index}"
+                 th:aria-labelledby="'certificateHeader' + ${certificateInfoStat.index}" data-parent="#accordion">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
+                        <span th:text="${certificateInfo.userName}">姓名</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        证书编号：
+                        <span th:text="${certificateInfo.serialNum}">证书编号</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        证书名称：
+                        <span th:text="${certificateInfo.certificateName}">证书名称</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证时间：
+                        <span th:text="${certificateInfo.issueTime}">发证时间</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center">
+                        发证单位：
+                        <span th:text="${certificateInfo.issuingUnit}">发证单位</span>
+                    </li>
+                    <li class="list-group-item  justify-content-between align-items-center" style="padding: 20px 5px">
+                        <small th:if="${certificateInfo.inconsistency}">
+                            注：电子版证书升级，原"XX行为干预师（理论部分）"纸质证书与此电子证书具有同等效力，均可作为ABA线上课程结课考核通过证明。
+                        </small><br/>
+                        <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg?R=' + ${#strings.randomAlphanumeric(4)}}" width="100%" style="padding-bottom:10px">
+                        <b style="color: red">*</b> 请长按图片保存您的证书。
+                    </li>
+                </ul>
             </div>
-        </a>
-        <div class="collapse show" th:id="'certificateData' + ${certificateInfoStat.index}"
-             th:aria-labelledby="'certificateHeader' + ${certificateInfoStat.index}" data-parent="#accordion">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item  justify-content-between align-items-center">
-                    姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：
-                    <span th:text="${certificateInfo.userName}">姓名</span>
-                </li>
-                <li class="list-group-item  justify-content-between align-items-center">
-                    证书编号：
-                    <span th:text="${certificateInfo.serialNum}">证书编号</span>
-                </li>
-                <li class="list-group-item  justify-content-between align-items-center">
-                    证书名称：
-                    <span th:text="${certificateInfo.certificateName}">证书名称</span>
-                </li>
-                <li class="list-group-item  justify-content-between align-items-center">
-                    发证时间：
-                    <span th:text="${certificateInfo.issueTime}">发证时间</span>
-                </li>
-                <li class="list-group-item  justify-content-between align-items-center">
-                    发证单位：
-                    <span th:text="${certificateInfo.issuingUnit}">发证单位</span>
-                </li>
-                <li class="list-group-item  justify-content-between align-items-center" style="padding: 50px 5px">
-                    <img th:src="@{'/'+${certificateInfo.fileName}+'.jpg?R=' + ${#strings.randomAlphanumeric(4)}}" width="100%" style="padding-bottom:10px">
-                    <b style="color: red">*</b> 请长按图片保存您的证书。
-                </li>
-            </ul>
         </div>
+    </p>
+    <div th:if="${#lists.isEmpty(certificateInfoList)}" class="justify-content-between align-items-center">
+        没有相关信息！
     </div>
 
+    <div class="justify-content-between align-items-center">
+        <img th:src="@{'/img/ad_title.jpg'}" width="100%" >
+    </div>
+    <!--<div class="justify-content-between align-items-center">
+        <img th:src="@{'/img/ad_coupon.png'}" width="100%" style="padding:5px 25px" onclick="adClick(4)">
+    </div>-->
+    <div class="justify-content-between align-items-center">
+        <img th:src="@{'/img/ad_junior.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(1)">
+    </div>
+    <div class="justify-content-between align-items-center">
+        <img th:src="@{'/img/ad_intermediate.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(2)">
+    </div>
+    <div class="justify-content-between align-items-center">
+        <img th:src="@{'/img/ad_senior.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(3)">
+    </div>
 </div>
-<div th:if="${#lists.isEmpty(certificateInfoList)}" class="justify-content-between align-items-center">
-    没有相关信息！
-</div>
-
-<div class="justify-content-between align-items-center">
-    <img th:src="@{'/img/ad_title.jpg'}" width="100%" >
-</div>
-<!--<div class="justify-content-between align-items-center">
-    <img th:src="@{'/img/ad_coupon.png'}" width="100%" style="padding:5px 25px" onclick="adClick(4)">
-</div>-->
-<div class="justify-content-between align-items-center">
-    <img th:src="@{'/img/ad_junior.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(1)">
-</div>
-<div class="justify-content-between align-items-center">
-    <img th:src="@{'/img/ad_intermediate.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(2)">
-</div>
-<div class="justify-content-between align-items-center">
-    <img th:src="@{'/img/ad_senior.jpg'}" width="100%" style="padding:5px 25px" onclick="adClick(3)">
-</div>
-
 <script th:inline="javascript">
     $(function ($) {
 
@@ -129,6 +131,5 @@
         });
     }
 </script>
-</div>
 </body>
 </html>

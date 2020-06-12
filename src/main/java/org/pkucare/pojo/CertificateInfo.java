@@ -59,6 +59,20 @@ public class CertificateInfo {
      */
     private String certificateImg;
 
+    /**
+     * 电子与纸质证书不一致声明
+     * @return
+     */
+    private Boolean inconsistency;
+
+    public Boolean getInconsistency() {
+        return inconsistency;
+    }
+
+    public void setInconsistency(Boolean inconsistency) {
+        this.inconsistency = inconsistency;
+    }
+
     public String getCertificateImg() {
         return certificateImg;
     }
