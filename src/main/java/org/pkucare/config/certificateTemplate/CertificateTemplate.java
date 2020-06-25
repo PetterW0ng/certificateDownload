@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public abstract class CertificateTemplate {
 
+
     @Value("${certificate.baseurl}")
     private String baseUrl;
 

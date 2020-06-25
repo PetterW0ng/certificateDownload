@@ -1,24 +1,22 @@
 package org.pkucare.service;
 
-import com.mongodb.BasicDBObject;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.repository.CertificateRepository;
+import org.pkucare.util.MessageDigestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicUpdate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -119,12 +117,17 @@ public class CertificateService {
                     break;
                 }
                 certificateInfo = new CertificateInfo();
+                String serialNum = row.getCell(2).getStringCellValue().trim();
                 certificateInfo.setUserName(row.getCell(1).getStringCellValue().trim());
-                certificateInfo.setSerialNum(row.getCell(2).getStringCellValue().trim());
+                certificateInfo.setSerialNum(serialNum);
                 certificateInfo.setCertificateName(row.getCell(5).getStringCellValue().trim());
                 certificateInfo.setIssueTime(row.getCell(6).getStringCellValue().trim());
                 certificateInfo.setIssuingUnit(row.getCell(7).getStringCellValue().trim());
-                certificateInfo.setFileName(row.getCell(4).getStringCellValue().trim());
+                String fileName = row.getCell(4).getStringCellValue().trim();
+                if (serialNum.startsWith("ABA-")) {
+                    fileName = MessageDigestUtil.getCertificateName(serialNum);
+                }
+                certificateInfo.setFileName(fileName);
                 certificateInfo.setPhone(phone);
                 Cell idCardCell = row.getCell(8);
                 if (null != idCardCell) {
