@@ -3,7 +3,7 @@
     <contextName>survey-wechat-web</contextName>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-    <property name="LOG_HOME" value="/data/logs/certificate" />
+    <property name="LOG_HOME" value="/usr/src/myapp/certdata/logs/certificate" />
 
     <!-- mybatis log configure-->
     <logger name="com.apache.ibatis" level="TRACE"/>
