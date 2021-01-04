@@ -8,7 +8,8 @@ public enum AdURL {
     AD_JUNIOR(1,"https://wx031c58989e81ab49.h5.xiaoe-tech.com/v1/course/column/p_5ddddd0e54a33_F7G3gYWR?type=3"),
     AD_INTERMEDIATE(2,"https://wx031c58989e81ab49.h5.xiaoe-tech.com/v1/course/column/p_5def6307d4f9b_TFMw50MV?type=3"),
     AD_SENIOR(3,"https://wx031c58989e81ab49.h5.xiaoe-tech.com/v1/course/column/p_5def632adf1ed_eCL0y64U?type=3"),
-    AD_COUPON(4,"https://wx031c58989e81ab49.h5.xiaoe-tech.com/coupon/get/cou_5e16b179a754f-7WRAX0");
+    AD_COUPON(4,"https://wx031c58989e81ab49.h5.xiaoe-tech.com/coupon/get/cou_5e16b179a754f-7WRAX0"),
+    AD_TIT(5,"https://tit.pkucarenjk.com/");
 
     int level;
     String url;
