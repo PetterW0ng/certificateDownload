@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pkucare</groupId>
 	<artifactId>certificate</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>certificate-download</name>
 	<description>北大医疗脑健康-证书服务</description>
 
