@@ -94,6 +94,7 @@ public class CertificateService {
     public Integer excel2Mongo(MultipartFile mFile) throws ValidateException {
         // 加载数据到缓存里面
         InputStream file = null;
+        int num = 1;
         try {
             file = mFile.getInputStream();
             Workbook workbook = new XSSFWorkbook(file);
@@ -102,6 +103,7 @@ public class CertificateService {
             CertificateInfo certificateInfo = null;
             List<CertificateInfo> certificateInfoList = new ArrayList<>();
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                num = i+1;
                 logger.info("解析至第 i = {} 行", i);
                 Row row = sheet.getRow(i);
                 String phone = "";
@@ -141,7 +143,7 @@ public class CertificateService {
             generateCertService.generateCertificate(certificateInfoList);
             return certificateInfoList.size();
         } catch (Exception e) {
-            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 原因：" + e.getMessage(), e);
+            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 第" + num + "行，原因：" + e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(file);
         }

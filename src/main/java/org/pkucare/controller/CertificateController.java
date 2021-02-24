@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.List;
 
 /**
  * 用户下载证书
@@ -208,6 +209,25 @@ public class CertificateController {
         mv.getModel().put("certificateInfoList", certificateService.queryCertBySerialNum(serialNum));
         mv.getModel().put("queryStr", serialNum);
         return mv;
+    }
+
+
+    /**
+     * 扫码 查询证书信息
+     *
+     * @param serialNum
+     * @return
+     * @throws ApiException
+     * @throws IOException
+     */
+    @RequestMapping(value = "/{serialNum}", method = RequestMethod.POST)
+    public Response queryCertificateBySerial(@PathVariable String serialNum) throws ValidateException {
+        if (StringUtils.isEmpty(serialNum)) {
+            throw new ValidateException();
+        }
+        Response<List> response = new Response();
+        response.setData(certificateService.queryCertBySerialNum(serialNum));
+        return response;
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
