@@ -2,11 +2,6 @@ package org.pkucare.certificateTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.zxing.WriterException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.apache.poi.sl.draw.Drawable;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xslf.usermodel.*;
 import org.apache.xmlbeans.XmlObject;
@@ -16,12 +11,10 @@ import org.pkucare.SpringBootApplicationTest;
 import org.pkucare.config.certificateTemplate.CertificateTemplate;
 import org.pkucare.pojo.CertificateInfo;
 import org.pkucare.pojo.constant.Constant;
-import org.pkucare.util.QrCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Resource;
 import javax.imageio.*;
@@ -30,14 +23,11 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static javax.print.attribute.ResolutionSyntax.DPI;
 
@@ -49,7 +39,7 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
 
 
     @Test
-    public void testGenerateCertificate(){
+    public void testGenerateCertificate() {
         String certJSON = "{ \n" +
                 "    \"userName\" : \"扩木那\", \n" +
                 "    \"serialNum\" : \"BISA-210404199602290023\", \n" +
@@ -67,8 +57,8 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
     @Test
     public void testGeneratePng() throws IOException {
         String[] number = {"8y2FUNxa", "8y34zPqA", "8y4MjAdT", "8y4xVQ5r", "8y5Wkk6e", "8y5qXeHb", "8y6DMYbj", "8y6ZtQYS", "8y6eAt8T", "8y6rZDpS", "8y7Eyc35", "8y7UkECs"};
-        for (String num : number){
-            generateCertificateImg("礼品卡"+num, num);
+        for (String num : number) {
+            generateCertificateImg("礼品卡" + num, num);
         }
 
     }
@@ -76,6 +66,7 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
     private static final byte[] FILE_INPUT_STREAM_ADVANCED_ARRAY;
 
     private static final String templatePath = "config/certificate-template/new.pptx";
+
     static {
         byte[] temp = null;
         try {
@@ -100,7 +91,7 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
                 XSLFTextBox xslfTextBox = (XSLFTextBox) shape;
                 XSLFTextRun xslfTextRun = xslfTextBox.getTextParagraphs().get(0).getTextRuns().get(0);
                 XmlObject xmlObject = xslfTextRun.getXmlObject();
-                if (shape.getShapeName().equals("number")){
+                if (shape.getShapeName().equals("number")) {
                     ((CTRegularTextRunImpl) xmlObject).setT(number);
                 }
             }
@@ -111,67 +102,30 @@ public class CertificateTemplateTest extends SpringBootApplicationTest {
         ppt.write(byteArrayOutputStream);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         byteArrayOutputStream = null;
-        generateJPGFile(byteArrayInputStream, pngName);
-
         // 1111111111111111111
         logger.info("结束生成 certName ={}", pngName);
     }
 
     String tempDirectory = "C:/迅雷下载/png/";
 
-    private void generateJPGFile(ByteArrayInputStream byteArrayInputStream, String certName) throws IOException {
-        XMLSlideShow ppt = new XMLSlideShow(byteArrayInputStream);
-        XSLFSlide slide = ppt.getSlides().get(0);
-        // 保存图片
-        Dimension onePPTPageSize = ppt.getPageSize();
-
-        /*ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
-        IIOMetadata metadata = writer.getDefaultImageMetadata（typeSpecifier，writeParam）;*/
-        int times = 2;
-        BufferedImage certificateImg = new BufferedImage(onePPTPageSize.width * times,
-                onePPTPageSize.height * times, BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D oneGraphics2D = certificateImg.createGraphics();
-        // 设置转换后的图片背景色为白色
-        oneGraphics2D.setPaint(Color.white);
-        // 将图片放大times倍
-        oneGraphics2D.scale(times, times);
-        oneGraphics2D.fill(new Rectangle2D.Float(0, 0, onePPTPageSize.width * times, onePPTPageSize.height * times));
-        slide.draw(oneGraphics2D);
-        String fileName = certName + Constant.DOT + "jpeg";
-        File file = new File(tempDirectory + fileName);
-
-        JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(file));
-        JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(certificateImg);
-        jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-        jpegEncoder.setJPEGEncodeParam(jpegEncodeParam); jpegEncodeParam.setQuality(0.75f, false);
-        jpegEncodeParam.setXDensity(300); jpegEncodeParam.setYDensity(300);
-        jpegEncoder.encode(certificateImg, jpegEncodeParam);
-        certificateImg.flush();
-//        ImageIO.write(certificateImg, Constant.CERTIFICATE_IMG_TYPE_PNG, file);
-        byteArrayInputStream = null;
-        logger.info("图片生成成功！");
-    }
-
 
     /**
-     *
-     BufferedImage image = ImageIO.read(new File(path));
-     JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(new File(path)));
-     JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
-     jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-     jpegEncoder.setJPEGEncodeParam(jpegEncodeParam); jpegEncodeParam.setQuality(0.75f, false);
-     jpegEncodeParam.setXDensity(300); jpegEncodeParam.setYDensity(300);
-     jpegEncoder.encode(image, jpegEncodeParam);
-     image.flush();
+     * BufferedImage image = ImageIO.read(new File(path));
+     * JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(new File(path)));
+     * JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
+     * jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
+     * jpegEncoder.setJPEGEncodeParam(jpegEncodeParam); jpegEncodeParam.setQuality(0.75f, false);
+     * jpegEncodeParam.setXDensity(300); jpegEncodeParam.setYDensity(300);
+     * jpegEncoder.encode(image, jpegEncodeParam);
+     * image.flush();
      */
 
-    public static void saveGridImage(File output,BufferedImage gridImage) throws IOException {
+    public static void saveGridImage(File output, BufferedImage gridImage) throws IOException {
         output.delete();
 
         final String formatName = "png";
 
-        for (Iterator<ImageWriter> iw = ImageIO.getImageWritersByFormatName(formatName); iw.hasNext();) {
+        for (Iterator<ImageWriter> iw = ImageIO.getImageWritersByFormatName(formatName); iw.hasNext(); ) {
             ImageWriter writer = iw.next();
             ImageWriteParam writeParam = writer.getDefaultWriteParam();
             ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);

@@ -49,6 +49,9 @@ public class CertIDPhotoService {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
             for (i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
+                if (row == null){
+                    break;
+                }
                 certIDPhoto = new CertIDPhoto();
                 for (j = 1; j <= 8; j++) {
                     CellType cellType = row.getCell(j).getCellType();
