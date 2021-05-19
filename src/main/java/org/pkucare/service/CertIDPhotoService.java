@@ -1,8 +1,10 @@
 package org.pkucare.service;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.pkucare.exception.ValidateException;
 import org.pkucare.pojo.CertIDPhoto;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -35,6 +38,7 @@ public class CertIDPhotoService {
     public Integer importExcel2Mongo(MultipartFile mFile) throws ValidateException {
         // 加载数据到缓存里面
         InputStream file = null;
+        int i = 0, j = 0;
         try {
             file = mFile.getInputStream();
             Workbook workbook = new XSSFWorkbook(file);
@@ -42,20 +46,47 @@ public class CertIDPhotoService {
             DecimalFormat df = new DecimalFormat("0");
             CertIDPhoto certIDPhoto = null;
             List<CertIDPhoto> certificateInfoList = new ArrayList<>();
-            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+            for (i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                if (row.getCell(2) == null || "".equals(row.getCell(2).getStringCellValue())) {
-                    break;
-                }
                 certIDPhoto = new CertIDPhoto();
-                certIDPhoto.setUserName(row.getCell(1).getStringCellValue().trim());
-                certIDPhoto.setSerialNum(row.getCell(2).getStringCellValue().trim());
-                certIDPhoto.setPhone(row.getCell(3).getStringCellValue().trim());
-                certIDPhoto.setIdCard(row.getCell(4).getStringCellValue().trim());
-                certIDPhoto.setCertificateName(row.getCell(5).getStringCellValue().trim());
-                certIDPhoto.setBeginTime(row.getCell(6).getDateCellValue());
-                certIDPhoto.setEndTime(row.getCell(7).getDateCellValue());
-                certIDPhoto.setBatchNum(row.getCell(8).getNumericCellValue());
+                for (j = 1; j <= 8; j++) {
+                    CellType cellType = row.getCell(j).getCellType();
+                    String v = "";
+                    if (cellType == CellType.NUMERIC) {
+                        v = df.format(row.getCell(j).getNumericCellValue());
+                    } else if (cellType == CellType.FORMULA) {
+                        v = row.getCell(j).getCellFormula();
+                    } else {
+                        v = row.getCell(j).getStringCellValue().trim();
+                    }
+                    switch (j) {
+                        case 1:
+                            certIDPhoto.setUserName(v);
+                            break;
+                        case 2:
+                            certIDPhoto.setSerialNum(v);
+                            break;
+                        case 3:
+                            certIDPhoto.setPhone(v);
+                            break;
+                        case 4:
+                            certIDPhoto.setIdCard(v);
+                            break;
+                        case 5:
+                            certIDPhoto.setCertificateName(v);
+                            break;
+                        case 6:
+                            certIDPhoto.setBeginTime(sdf.parse(v));
+                            break;
+                        case 7:
+                            certIDPhoto.setEndTime(sdf.parse(v));
+                            break;
+                        case 8:
+                            certIDPhoto.setBatchNum(Double.valueOf(v));
+                            break;
+                    }
+                }
                 certIDPhoto.setUploaded(Boolean.FALSE);
                 certIDPhoto.setFileName(MessageDigestUtil.getCertificateName(certIDPhoto.getSerialNum()));
                 certificateInfoList.add(certIDPhoto);
@@ -64,7 +95,7 @@ public class CertIDPhotoService {
             logger.info("数据文件加载成功，共加载了 {} 条数据", certificateInfoList.size());
             return certificateInfoList.size();
         } catch (Exception e) {
-            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 原因：" + e.getMessage(), e);
+            throw new ValidateException("excel 表格导入失败了，请参照模板格式！ 第" + i + "行,第" + j + "列出错了， 原因：请确认该列是否为文本，如果为日期请按照yyyy.MM.dd 格式", e);
         } finally {
             if (file != null) {
                 try {
