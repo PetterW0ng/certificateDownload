@@ -27,10 +27,10 @@ public class GenerateCertService {
     public void generateCertificate(List<CertificateInfo> certificateInfoList){
 
         certificateInfoList.stream().forEach(certificateInfo -> {
-            if (certificateInfo.getSerialNum().toUpperCase().contains(Constant.CERTIFICATE_ADVANCED_PREFIX)){
+            if (certificateInfo.getSerialNum().toUpperCase().startsWith(Constant.CERTIFICATE_ADVANCED_PREFIX)){
                 logger.info("{} 需要生成证书", certificateInfo.getIdCard());
                 advancedTemplate.generateCertificate(certificateInfo);
-            }else if (certificateInfo.getSerialNum().toUpperCase().contains(Constant.CERTIFICATE_ABA_PREFIX)){
+            }else if (certificateInfo.getSerialNum().toUpperCase().startsWith(Constant.CERTIFICATE_ABA_PREFIX)){
                 logger.info("{} 需要生成证书", certificateInfo.getSerialNum());
                 abaTemplate.generateCertificate(certificateInfo);
             }
